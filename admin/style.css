@@ -1,0 +1,28 @@
+/* TÁŃVIⱤ SUPER ADMIN — premium cream, brown and gold */
+:root{--cream:#f7f0e7;--paper:#fffaf3;--brown:#3b251d;--muted:#8c7565;--gold:#c69a55;--line:#e8d8c6}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--cream);color:var(--brown);font-family:Arial,Helvetica,sans-serif}
+.shell{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;max-width:1100px;margin:auto;padding:28px;gap:28px;align-items:center}
+.brand-panel{min-height:620px;border-radius:24px;padding:52px 42px;background:linear-gradient(145deg,#3b251d,#21140f);color:#fff7ed;display:flex;flex-direction:column;justify-content:center;box-shadow:0 18px 50px #3b251d20}
+.brand-mark{font-size:42px;color:var(--gold);margin-bottom:28px}
+.eyebrow{font-size:11px;letter-spacing:3px;color:var(--gold);font-weight:bold}
+h1{font-family:Georgia,serif;font-size:clamp(38px,5vw,62px);line-height:1.05;margin:18px 0}
+h1 span{color:var(--gold);font-size:.65em;letter-spacing:4px}
+.gold-line{width:74px;height:2px;background:var(--gold);margin:20px 0}
+.brand-copy{color:#e6d7c7;line-height:1.7;max-width:320px}
+.seal{font-size:10px;letter-spacing:2px;color:var(--gold);margin-top:38px}
+.login-panel{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:clamp(24px,5vw,52px);box-shadow:0 18px 50px #3b251d12}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px}
+.mobile-mark{display:none;color:var(--gold);font-size:30px;margin-top:24px}
+.login-panel h2{font-family:Georgia,serif;font-size:34px;margin:28px 0 8px}
+.subtext{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:30px}
+label{display:block;font-size:12px;font-weight:bold;margin:18px 0 8px}
+.input-wrap{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:0 13px}
+.input-wrap span{color:var(--gold)}
+.input-wrap input{width:100%;min-width:0;border:0;outline:0;padding:15px 0;background:transparent;color:var(--brown)}
+.input-wrap button{border:0;background:none;color:var(--muted);cursor:pointer}
+.submit{width:100%;border:0;border-radius:10px;background:var(--brown);color:#fff;padding:16px;margin-top:25px;letter-spacing:1.5px;font-weight:bold;cursor:pointer}
+.submit:hover{background:#54382b}
+.notice{font-size:12px;line-height:1.6;color:#8a4b32;margin-top:16px;overflow-wrap:anywhere}
+.copyright{font-size:10px;color:#a28d7c;letter-spacing:1px;margin-top:38px}
+@media(max-width:760px){.shell{display:block;padding:14px}.brand-panel{display:none}.login-panel{margin:12px auto;max-width:480px;padding:28px 22px}.mobile-mark{display:block}.login-panel h2{margin-top:14px}}
