@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#3b251d">
+<title>TÁŃVIⱤ-ĆAĶA-ŚĦÖP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"></head><body>
+<div class="topline">FRESHLY BAKED FOR YOUR SPECIAL MOMENTS <span>✦</span> JALPAIGURI & HALDIBARI</div>
+<header class="header"><a class="logo" href="#"><span class="crown">♛</span><span><b>TÁŃVIⱤ</b><small>ĆAĶA-ŚĦÖP</small></span></a>
+<nav id="nav"><a class="selected" href="#home">Home</a><a href="#collections">Collections</a><a href="#featured">Best Sellers</a><a href="#story">Our Story</a></nav>
+<div class="actions"><button class="search" id="searchBtn">⌕</button><button class="bag" id="bagBtn">Bag <span id="bagCount">0</span></button><button class="hamb" id="hamb">☰</button></div></header>
+<div class="searchbar" id="searchbar"><input id="searchInput" placeholder="Search cakes and flavours..." type="search"></div>
+
+<div class="auth-strip" style="max-width:1180px;margin:14px auto;padding:12px 18px;background:#f6eee4;border:1px solid #e7d8c7;border-radius:12px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+  <span id="userStatus" style="font-size:13px;color:#57382c">Sign in to manage your account and orders.</span>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button id="userLoginBtn" style="padding:9px 14px;border:0;border-radius:8px;background:#3b251d;color:white">Sign in</button>
+    <button id="userLogoutBtn" style="display:none;padding:9px 14px;border:1px solid #8d6a50;border-radius:8px;background:transparent;color:#3b251d">Sign out</button>
+  </div>
+</div>
+<div id="userAuthModal" style="display:none;position:fixed;inset:0;background:#160e0bcc;z-index:9999;place-items:center;padding:18px">
+ <div style="background:#fffaf3;padding:24px;border-radius:16px;width:min(100%,390px);color:#3b251d">
+  <button id="closeAuth" style="float:right;border:0;background:none;font-size:24px">×</button>
+  <h2 style="font-family:Georgia,serif">Welcome to TÁŃVIⱤ</h2>
+  <p style="font-size:13px;color:#826c5e">Sign in or create your customer account.</p>
+  <label style="display:block;font-size:12px;margin:12px 0 5px">Email</label><input id="userEmail" type="email" autocomplete="email" style="width:100%;padding:12px;border:1px solid #ddcbbb;border-radius:8px">
+  <label style="display:block;font-size:12px;margin:12px 0 5px">Password</label><input id="userPassword" type="password" autocomplete="current-password" style="width:100%;padding:12px;border:1px solid #ddcbbb;border-radius:8px">
+  <button id="emailSignIn" style="width:100%;padding:12px;margin-top:14px;background:#3b251d;color:white;border:0;border-radius:8px">Sign in</button>
+  <button id="emailSignUp" style="width:100%;padding:12px;margin-top:8px;background:#c69a55;color:#241710;border:0;border-radius:8px">Create account</button>
+  <button id="googleSignIn" style="width:100%;padding:12px;margin-top:8px;background:white;border:1px solid #ddcbbb;border-radius:8px">Continue with Google</button>
+  <p id="authMessage" style="font-size:12px;line-height:1.5;color:#8a4b32"></p>
+ </div>
+</div>
+
+<main>
+<section class="hero" id="home"><div class="hero-copy"><div class="kicker">— THE ART OF CELEBRATION</div>
+<h1>A little joy.<br><em>A lot of</em> sweetness.</h1><p>Thoughtfully crafted cakes for birthdays, celebrations and all the beautiful moments in between.</p>
+<div class="hero-ctas"><a class="primary" href="#featured">Explore our cakes <span>↗</span></a><a class="under" href="#collections">Find your favourite</a></div><div class="fresh-note">✧ &nbsp; Baked fresh. Finished with love.</div></div>
+<div class="hero-visual" aria-label="Decorative celebration cake"><div class="halo"></div><div class="flower f1">✿</div><div class="flower f2">✧</div><div class="plate"></div><div class="cakebase"><span>♡</span></div><div class="caketop"><span>✦</span></div><div class="candle"><i></i></div><div class="visual-caption">Made for<br>your moments.</div></div><div class="hero-index">01 <span>/</span> 04</div></section>
+<section class="promise"><div><span>✧</span><p><b>Freshly prepared</b><small>Made for your order</small></p></div><div><span>♡</span><p><b>Thoughtfully crafted</b><small>Details made with care</small></p></div><div><span>⌖</span><p><b>Local delivery</b><small>Jalpaiguri & Haldibari</small></p></div></section>
+<section class="section" id="collections"><div class="section-title"><div><label>MADE FOR EVERY OCCASION</label><h2>Find your <em>sweet moment.</em></h2></div><a href="#featured">Explore all →</a></div>
+<div class="collections">
+<a class="collection" href="#featured"><span>🎂</span><b>Birthday</b><small>Make a wish</small></a><a class="collection alt" href="#featured"><span>💍</span><b>Wedding</b><small>For your forever</small></a><a class="collection" href="#featured"><span>💝</span><b>Anniversary</b><small>Celebrate together</small></a><a class="collection alt" href="#featured"><span>🍫</span><b>Chocolate</b><small>Rich little moments</small></a><a class="collection" href="#featured"><span>📸</span><b>Photo cakes</b><small>Your memory, made sweet</small></a><a class="collection alt" href="#featured"><span>✨</span><b>Custom cakes</b><small>Your idea, our craft</small></a></div></section>
+<section class="section featured" id="featured"><div class="section-title"><div><label>A FEW CUSTOMER FAVOURITES</label><h2>The <em>sweetest picks.</em></h2></div><span class="sample">Preview products · sample prices</span></div>
+<div class="products">
+<article class="product"><div class="product-art art-a">🍓<span>POPULAR</span></div><div class="product-meta"><div><small>CLASSIC FAVOURITE</small><h3>Strawberry Dream</h3></div><b>₹599*</b></div><p>Soft, fruity and beautifully light.</p><button class="add" data-name="Strawberry Dream" data-price="599">Add to bag +</button></article>
+<article class="product"><div class="product-art art-b">🍫<span>BEST SELLER</span></div><div class="product-meta"><div><small>CHOCOLATE COLLECTION</small><h3>Chocolate Velvet</h3></div><b>₹699*</b></div><p>Deep cocoa with a silky finish.</p><button class="add" data-name="Chocolate Velvet" data-price="699">Add to bag +</button></article>
+<article class="product"><div class="product-art art-c">🍒<span>HOUSE SPECIAL</span></div><div class="product-meta"><div><small>TIMELESS CLASSIC</small><h3>Black Forest</h3></div><b>₹649*</b></div><p>Chocolate, cream and cherry bliss.</p><button class="add" data-name="Black Forest" data-price="649">Add to bag +</button></article></div>
+<p class="price-note">*Illustrative prices only. Final prices, sizes and availability will be set by the shop.</p></section>
+<section class="custom" id="story"><div><label>YOUR IDEA, OUR CRAFT</label><h2>Dream up a cake.<br><em>We’ll make it sweet.</em></h2><p>Have a special design in mind? Tell us what you’re imagining and let’s make your celebration one to remember.</p><a href="https://wa.me/919883184962" target="_blank" rel="noopener" class="light-btn">Talk about a custom cake ↗</a></div><div class="seal">MADE<br>WITH<br><strong>LOVE ♡</strong></div></section>
+</main><footer><a class="logo footlogo" href="#"><span class="crown">♛</span><span><b>TÁŃVIⱤ</b><small>ĆAĶA-ŚĦÖP</small></span></a><p>Every Cake Tells a Sweet Story.</p><div class="footbottom"><span>© 2026 TÁŃVIⱤ-ĆAĶA-ŚĦÖP</span><span>Jalpaiguri · Haldibari, West Bengal</span></div></footer>
+<div class="shade" id="shade"></div><aside class="drawer" id="drawer"><div class="drawerhead"><div><label>YOUR SELECTION</label><h3>Your bag</h3></div><button id="closeBag">×</button></div><div id="items" class="items"><p class="empty">Your bag is empty. Add a little sweetness.</p></div><div class="drawerbottom"><div class="total"><span>Subtotal</span><b id="subtotal">₹0</b></div><small>Final price and delivery will be confirmed by the shop.</small><button class="primary checkout" id="checkout">Continue to order</button></div></aside><div class="toast" id="toast"></div>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="auth.js"></script>
+<script src="app.js"></script></body></html>
