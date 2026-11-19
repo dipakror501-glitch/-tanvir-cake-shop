@@ -12,79 +12,47 @@
 
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;background:#faf6ef;color:#3b251d;
- font-family:Arial,sans-serif
-}
-header{
- background:#3b251d;color:white;padding:17px;
- display:flex;justify-content:space-between;align-items:center;
- position:sticky;top:0;z-index:5
-}
+body{margin:0;background:#faf6ef;color:#3b251d;font-family:Arial,sans-serif}
+header{background:#3b251d;color:white;padding:17px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
 header h2{margin:0;font-size:18px}
 header small{color:#e2bd83}
-button{
- border:0;background:#b48a51;color:white;
- padding:10px 14px;border-radius:8px;cursor:pointer
-}
+button{border:0;background:#b48a51;color:white;padding:10px 14px;border-radius:8px;cursor:pointer;margin:3px}
 .layout{display:flex;min-height:calc(100vh - 60px)}
-aside{
- width:220px;background:#fffdf9;
- border-right:1px solid #e9ded1;padding:12px;
- flex-shrink:0
-}
-nav button{
- display:block;width:100%;text-align:left;
- background:transparent;color:#3b251d;
- margin:3px 0;padding:13px 10px
-}
-nav button.active,nav button:hover{
- background:#f1e6d7;color:#805b30
-}
+aside{width:220px;background:#fffdf9;border-right:1px solid #e9ded1;padding:12px;flex-shrink:0}
+nav button{display:block;width:100%;text-align:left;background:transparent;color:#3b251d;margin:3px 0;padding:13px 10px}
+nav button.active,nav button:hover{background:#f1e6d7;color:#805b30}
 main{padding:20px;width:100%;max-width:1100px;margin:auto}
 .section{display:none}
 .section.active{display:block}
 h2{margin-top:0}
-.cards{
- display:grid;grid-template-columns:repeat(2,1fr);
- gap:12px;margin:18px 0
-}
-.card,.box{
- background:white;border:1px solid #e9ded1;
- border-radius:13px;padding:17px;margin-bottom:14px
-}
-.card strong{font-size:23px;display:block;margin-top:10px}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}
+.card,.box{background:white;border:1px solid #e9ded1;border-radius:13px;padding:17px;margin-bottom:14px}
+.card strong{font-size:23px;display:block;margin:10px 0}
 .card span{font-size:13px;color:#89776d}
-input,select,textarea{
- width:100%;padding:12px;margin:7px 0 13px;
- border:1px solid #d8c7b2;border-radius:8px;
- background:white;font-size:15px
-}
+input,select,textarea{width:100%;padding:12px;margin:7px 0 13px;border:1px solid #d8c7b2;border-radius:8px;background:white;font-size:15px}
 label{font-size:13px;font-weight:bold}
 .primary{background:#654537}
 .danger{background:#a83232}
 .secondary{background:#75695f}
-.item{
- background:white;border:1px solid #e9ded1;
- border-radius:10px;padding:14px;margin:10px 0;
- overflow-wrap:anywhere
-}
+.item{background:white;border:1px solid #e9ded1;border-radius:10px;padding:14px;margin:10px 0;overflow-wrap:anywhere}
 .item button{margin:5px 5px 0 0}
 .status{font-size:13px;margin:10px 0;overflow-wrap:anywhere}
-.notice{
- background:#fff4dc;border:1px solid #ead3a7;
- padding:13px;border-radius:10px;font-size:13px;
- line-height:1.6;margin:12px 0
-}
+.notice{background:#fff4dc;border:1px solid #ead3a7;padding:13px;border-radius:10px;font-size:13px;line-height:1.6;margin:12px 0}
+img.preview{max-width:130px;max-height:110px;object-fit:cover;border-radius:8px;display:block;margin:8px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;background:white}
 td,th{padding:10px;border-bottom:1px solid #eee;text-align:left}
-.table-wrap{overflow-x:auto}
+.management{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.management .card{cursor:pointer}
+.management .card button{margin-top:12px}
 @media(max-width:650px){
  .layout{display:block}
  aside{width:100%;border-right:0;border-bottom:1px solid #e9ded1}
  nav{display:flex;overflow-x:auto;gap:5px}
  nav button{white-space:nowrap;width:auto}
  main{padding:14px}
+ .management{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -100,152 +68,233 @@ td,th{padding:10px;border-bottom:1px solid #eee;text-align:left}
 </header>
 
 <div class="layout">
-
 <aside>
- <nav id="menu">
-  <button class="active" data-page="home">📊 Dashboard</button>
-  <button data-page="products">🎂 Products</button>
-  <button data-page="categories">📂 Categories</button>
-  <button data-page="orders">🛒 Orders</button>
-  <button data-page="customers">👥 Customers</button>
-  <button data-page="payments">💳 Payments</button>
-  <button data-page="delivery">🚚 Delivery</button>
-  <button data-page="coupons">🎟️ Offers & Coupons</button>
-  <button data-page="reports">📈 Sales Reports</button>
-  <button data-page="reviews">⭐ Reviews</button>
-  <button data-page="staff">👨‍💼 Staff</button>
-  <button data-page="settings">⚙️ Settings</button>
- </nav>
+<nav id="menu">
+<button class="active" data-page="home">📊 Dashboard</button>
+<button data-page="products">🎂 Products</button>
+<button data-page="categories">📂 Categories</button>
+<button data-page="orders">🛒 Orders</button>
+<button data-page="customers">👥 Customers</button>
+<button data-page="payments">💳 Payments</button>
+<button data-page="delivery">🚚 Delivery</button>
+<button data-page="coupons">🎟️ Coupons</button>
+<button data-page="reports">📈 Reports</button>
+<button data-page="reviews">⭐ Reviews</button>
+<button data-page="staff">👨‍💼 Staff</button>
+<button data-page="settings">⚙️ Settings</button>
+</nav>
 </aside>
 
 <main>
 
-<!-- DASHBOARD -->
 <section id="home" class="section active">
- <h2>Welcome, Admin 👋</h2>
- <p>Manage your cake shop from one place.</p>
+<h2>Welcome, Admin 👋</h2>
+<p>Manage your cake shop from one place.</p>
 
- <div class="cards">
-  <div class="card">🎂 Products<strong id="countProducts">0</strong><span>Total products</span></div>
-  <div class="card">🛒 Orders<strong id="countOrders">0</strong><span>Total orders</span></div>
-  <div class="card">👥 Customers<strong id="countCustomers">0</strong><span>Total customers</span></div>
-  <div class="card">📂 Categories<strong id="countCategories">0</strong><span>Total categories</span></div>
- </div>
+<div class="cards">
+<div class="card">🎂 Products<strong id="countProducts">0</strong><span>Total products</span></div>
+<div class="card">🛒 Orders<strong id="countOrders">0</strong><span>Total orders</span></div>
+<div class="card">👥 Customers<strong id="countCustomers">0</strong><span>Total customers</span></div>
+<div class="card">📂 Categories<strong id="countCategories">0</strong><span>Total categories</span></div>
+</div>
 
- <div class="notice">
-  Welcome to your TÁŃVIⱤ Cake Shop Admin Panel.
- </div>
+<h3>Management Center</h3>
+<div class="management">
+<div class="card" onclick="showPage('products')">🎂 Products<br><span>Add, edit, delete products</span><br><button>Open Management</button></div>
+<div class="card" onclick="showPage('categories')">📂 Categories<br><span>Manage cake categories</span><br><button>Open Management</button></div>
+<div class="card" onclick="showPage('coupons')">🎟️ Coupons<br><span>Create discount offers</span><br><button>Open Management</button></div>
+<div class="card" onclick="showPage('orders')">🛒 Orders<br><span>Manage customer orders</span><br><button>Open Management</button></div>
+<div class="card" onclick="showPage('customers')">👥 Customers<br><span>View customer profiles</span><br><button>Open Management</button></div>
+<div class="card" onclick="showPage('payments')">💳 Payments<br><span>UPI and COD settings</span><br><button>Open Management</button></div>
+<div class="card" onclick="showPage('delivery')">🚚 Delivery<br><span>Manage delivery areas</span><br><button>Open Management</button></div>
+<div class="card" onclick="showPage('reports')">📈 Reports<br><span>Sales and expenses</span><br><button>Open Management</button></div>
+<div class="card" onclick="showPage('reviews')">⭐ Reviews<br><span>Manage customer reviews</span><br><button>Open Management</button></div>
+<div class="card" onclick="showPage('staff')">👨‍💼 Staff<br><span>Staff records</span><br><button>Open Management</button></div>
+<div class="card" onclick="showPage('settings')">⚙️ Settings<br><span>Store configuration</span><br><button>Open Management</button></div>
+</div>
 </section>
 
 <!-- PRODUCTS -->
 <section id="products" class="section">
- <h2>🎂 Products Management</h2>
- <div class="box">
-  <form id="productForm">
-   <input id="pName" placeholder="Product Name" required>
-   <input id="pPrice" type="number" min="1" placeholder="Price ₹" required>
-   <input id="pCategory" placeholder="Category" required>
-   <textarea id="pDescription" placeholder="Description"></textarea>
-   <input id="pStock" type="number" min="0" value="10" placeholder="Stock">
-   <button class="primary" type="submit" id="pSave">Save Product</button>
-   <button type="button" class="secondary" id="pCancel" onclick="resetProduct()" hidden>Cancel</button>
-   <p id="pMessage" class="status"></p>
-  </form>
- </div>
- <div id="productList">Loading...</div>
+<h2>🎂 Products Management</h2>
+<div class="box">
+<form id="productForm">
+<label>Product Name</label>
+<input id="pName" required placeholder="Chocolate Cake">
+<label>Price ₹</label>
+<input id="pPrice" type="number" min="1" required>
+<label>Category</label>
+<select id="pCategory" required></select>
+<label>Description</label>
+<textarea id="pDescription"></textarea>
+<label>Stock</label>
+<input id="pStock" type="number" min="0" value="10">
+<label>Product Image URL</label>
+<input id="pImage" type="url" placeholder="https://example.com/cake.jpg">
+<button class="primary" id="pSave">Save Product</button>
+<button type="button" class="secondary" id="pCancel" onclick="resetProduct()" hidden>Cancel</button>
+<p id="pMessage" class="status"></p>
+</form>
+</div>
+<div id="productList">Loading...</div>
 </section>
 
 <!-- CATEGORIES -->
 <section id="categories" class="section">
- <h2>📂 Categories Management</h2>
- <div class="box">
-  <form id="categoryForm">
-   <input id="categoryName" placeholder="Category Name" required>
-   <button class="primary">Add Category</button>
-   <p id="categoryMessage" class="status"></p>
-  </form>
- </div>
- <div id="categoryList"></div>
+<h2>📂 Categories</h2>
+<div class="box">
+<form id="categoryForm">
+<input id="categoryName" placeholder="Category Name" required>
+<button class="primary">Add Category</button>
+<p id="categoryMessage" class="status"></p>
+</form>
+</div>
+<div id="categoryList"></div>
 </section>
 
 <!-- ORDERS -->
 <section id="orders" class="section">
- <h2>🛒 Orders Management</h2>
- <div id="orderList">Loading orders...</div>
+<h2>🛒 Orders Management</h2>
+<div id="orderList">Loading orders...</div>
 </section>
 
 <!-- CUSTOMERS -->
 <section id="customers" class="section">
- <h2>👥 Customers</h2>
- <div id="customerList">Loading customers...</div>
+<h2>👥 Customers</h2>
+<div id="customerList">Loading customers...</div>
 </section>
 
 <!-- PAYMENTS -->
 <section id="payments" class="section">
- <h2>💳 Payments</h2>
- <div class="notice">
-  Payment Gateway setup required.<br>
-  UPI QR, Razorpay and COD will be configured after secure backend setup.
- </div>
+<h2>💳 Payment Settings</h2>
+<div class="box">
+<form id="paymentForm">
+<label>UPI ID</label>
+<input id="upiId" placeholder="yourname@upi">
+<label>UPI QR Image URL</label>
+<input id="upiQr" type="url" placeholder="https://example.com/qr.jpg">
+<img id="qrPreview" class="preview" hidden>
+<label><input type="checkbox" id="upiEnabled" style="width:auto"> Enable UPI</label>
+<br>
+<label><input type="checkbox" id="codEnabled" style="width:auto"> Enable Cash on Delivery</label>
+<br><br>
+<label><input type="checkbox" id="razorEnabled" style="width:auto"> Razorpay enabled (only after backend setup)</label>
+<p class="notice">Razorpay Secret Key এখানে দেবে না। নিরাপদ Backend ছাড়া Razorpay Payment চালু করা যাবে না।</p>
+<button class="primary">Save Payment Settings</button>
+<p id="paymentMessage" class="status"></p>
+</form>
+</div>
 </section>
 
 <!-- DELIVERY -->
 <section id="delivery" class="section">
- <h2>🚚 Delivery Management</h2>
- <div class="notice">
-  Delivery zones, PIN codes, delivery charges and tracking require their database configuration.
- </div>
+<h2>🚚 Delivery Management</h2>
+<div class="box">
+<form id="deliveryForm">
+<label>Area / Town</label>
+<input id="dArea" placeholder="Jalpaiguri" required>
+<label>PIN Code</label>
+<input id="dPin" maxlength="6" placeholder="735101" required>
+<label>Delivery Charge ₹</label>
+<input id="dCharge" type="number" min="0" value="0" required>
+<button class="primary">Add Delivery Area</button>
+<p id="deliveryMessage" class="status"></p>
+</form>
+<label><input type="checkbox" id="pickupEnabled" style="width:auto"> Enable Store Pickup</label>
+<button onclick="savePickup()">Save Pickup Setting</button>
+</div>
+<div id="deliveryList"></div>
 </section>
 
 <!-- COUPONS -->
 <section id="coupons" class="section">
- <h2>🎟️ Offers & Coupons</h2>
- <div class="box">
-  <p>Open the existing Coupon Management page:</p>
-  <a href="offers.html"><button class="primary">Open Coupon Management</button></a>
- </div>
- <div class="notice">
-  Coupon database permissions need to be configured before coupon operations can work.
- </div>
+<h2>🎟️ Offers & Coupons</h2>
+<div class="box">
+<form id="couponForm">
+<label>Coupon Code</label>
+<input id="cCode" placeholder="XMAS75" required>
+<label>Discount Type</label>
+<select id="cType">
+<option value="percentage">Percentage (%)</option>
+<option value="fixed">Fixed Amount (₹)</option>
+</select>
+<label>Discount Value</label>
+<input id="cValue" type="number" min="1" required>
+<label>Minimum Order ₹</label>
+<input id="cMin" type="number" min="0" value="0">
+<label>Maximum Discount ₹</label>
+<input id="cMax" type="number" min="0" value="200">
+<label>Usage Limit</label>
+<input id="cLimit" type="number" min="1" value="100">
+<label>Expiry Date</label>
+<input id="cExpiry" type="date">
+<label><input type="checkbox" id="cActive" checked style="width:auto"> Active</label>
+<br>
+<button class="primary">Create Coupon</button>
+<p id="couponMessage" class="status"></p>
+</form>
+</div>
+<div id="couponList"></div>
 </section>
 
 <!-- REPORTS -->
 <section id="reports" class="section">
- <h2>📈 Sales Reports</h2>
- <div class="notice">
-  Sales reports will be calculated from verified orders and payment records after payment integration.
- </div>
+<h2>📈 Sales Reports</h2>
+<div class="cards">
+<div class="card">Delivered Sales<strong id="salesTotal">₹0</strong></div>
+<div class="card">Total Expenses<strong id="expenseTotal">₹0</strong></div>
+<div class="card">Estimated Balance<strong id="profitTotal">₹0</strong></div>
+</div>
+<div class="box">
+<h3>Add Expense</h3>
+<form id="expenseForm">
+<input id="expenseName" placeholder="Expense name" required>
+<input id="expenseAmount" type="number" min="1" placeholder="Amount ₹" required>
+<button class="primary">Add Expense</button>
+<p id="expenseMessage" class="status"></p>
+</form>
+</div>
+<div id="expenseList"></div>
+<button onclick="loadReports()">Refresh Reports</button>
 </section>
 
 <!-- REVIEWS -->
 <section id="reviews" class="section">
- <h2>⭐ Reviews</h2>
- <div id="reviewList">Review database setup required.</div>
+<h2>⭐ Customer Reviews</h2>
+<div id="reviewList">Loading reviews...</div>
 </section>
 
 <!-- STAFF -->
 <section id="staff" class="section">
- <h2>👨‍💼 Staff Management</h2>
- <div class="notice">
-  Staff accounts and role-based permissions require secure backend authorization.
- </div>
+<h2>👨‍💼 Staff Management</h2>
+<div class="notice">এখানে Staff-এর তথ্য রাখা যাবে। শুধু এই পেজ থেকে Staff Login বা নিরাপদ Permission তৈরি হয় না। তার জন্য Backend Authorization প্রয়োজন।</div>
+<div class="box">
+<form id="staffForm">
+<input id="staffName" placeholder="Staff Name" required>
+<input id="staffPhone" placeholder="Phone Number">
+<input id="staffRole" placeholder="Role / Job Title" required>
+<button class="primary">Add Staff Record</button>
+<p id="staffMessage" class="status"></p>
+</form>
+</div>
+<div id="staffList"></div>
 </section>
 
 <!-- SETTINGS -->
 <section id="settings" class="section">
- <h2>⚙️ Store Settings</h2>
- <div class="box">
-  <form id="settingsForm">
-   <label>Shop Name</label>
-   <input id="shopName" value="TÁŃVIⱤ CAKE SHOP">
-   <label>Support Number</label>
-   <input id="supportNumber" value="+919883184962">
-   <label>Tagline</label>
-   <input id="tagline" value="Every Cake Tells a Sweet Story.">
-   <button class="primary">Save Settings</button>
-   <p id="settingsMessage" class="status"></p>
-  </form>
- </div>
+<h2>⚙️ Store Settings</h2>
+<div class="box">
+<form id="settingsForm">
+<label>Shop Name</label>
+<input id="shopName" value="TÁŃVIⱤ CAKE SHOP">
+<label>Support Number</label>
+<input id="supportNumber" value="+919883184962">
+<label>Tagline</label>
+<input id="tagline" value="Every Cake Tells a Sweet Story.">
+<button class="primary">Save Settings</button>
+<p id="settingsMessage" class="status"></p>
+</form>
+</div>
 </section>
 
 </main>
@@ -255,137 +304,156 @@ td,th{padding:10px;border-bottom:1px solid #eee;text-align:left}
 const ADMIN_UID="vtKNxlGQ9mbqV4i5xrodgAQDKUd2";
 const auth=firebase.auth();
 const db=firebase.database();
-
-let productData={};
-let categoryData={};
-let editingProduct=null;
-
 const $=id=>document.getElementById(id);
 
-function say(id,msg){$(id).textContent=msg}
+let products={},categories={},orders={},customers={},editingProduct=null;
 
-function logout(){
- auth.signOut().then(()=>location.replace("index.html"));
+function msg(id,text){$(id).textContent=text}
+function money(n){return "₹"+Number(n||0).toLocaleString("en-IN")}
+
+function safeText(value){
+ return String(value??"");
 }
 
-// Navigation
-document.querySelectorAll("#menu button").forEach(button=>{
- button.addEventListener("click",()=>{
-  document.querySelectorAll("#menu button").forEach(b=>b.classList.remove("active"));
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  button.classList.add("active");
-  $(button.dataset.page).classList.add("active");
- });
+function showPage(page){
+ document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+ document.querySelectorAll("#menu button").forEach(b=>b.classList.remove("active"));
+ $(page).classList.add("active");
+ const btn=document.querySelector(`#menu button[data-page="${page}"]`);
+ if(btn)btn.classList.add("active");
+ window.scrollTo({top:0,behavior:"smooth"});
+ if(page==="reports")loadReports();
+}
+
+document.querySelectorAll("#menu button").forEach(b=>{
+ b.addEventListener("click",()=>showPage(b.dataset.page));
 });
 
-// Admin verification
-auth.onAuthStateChanged(async user=>{
- if(!user){
-  location.replace("index.html");
-  return;
- }
+async function logout(){
+ await auth.signOut();
+ location.replace("index.html");
+}
 
+function adminCheck(){
+ return auth.currentUser && auth.currentUser.uid===ADMIN_UID;
+}
+
+auth.onAuthStateChanged(async user=>{
+ if(!user){location.replace("index.html");return;}
  try{
   const snap=await db.ref("admins/"+user.uid).once("value");
-
   if(user.uid!==ADMIN_UID || snap.val()!==true){
    await auth.signOut();
    location.replace("index.html");
    return;
   }
-
   loadProducts();
   loadCategories();
   loadOrders();
   loadCustomers();
   loadSettings();
-
- }catch(error){
-  alert("Admin verification failed: "+error.message);
+  loadPayments();
+  loadDelivery();
+  loadCoupons();
+  loadReviews();
+  loadStaff();
+ }catch(e){
+  alert("Admin verification failed: "+e.message);
  }
 });
 
-// Products
+/* PRODUCTS */
 function loadProducts(){
  db.ref("products").on("value",snap=>{
-  productData=snap.val()||{};
-  $("countProducts").textContent=Object.keys(productData).length;
+  products=snap.val()||{};
+  $("countProducts").textContent=Object.keys(products).length;
   renderProducts();
- },error=>say("pMessage",error.message));
+ },e=>msg("pMessage",e.message));
 }
 
 function renderProducts(){
- $("productList").innerHTML="";
- Object.entries(productData).forEach(([id,p])=>{
+ const list=$("productList");
+ list.innerHTML="";
+ Object.entries(products).forEach(([id,p])=>{
   const div=document.createElement("div");
   div.className="item";
-
-  const title=document.createElement("b");
-  title.textContent=p.name||"Unnamed";
-
+  const name=document.createElement("b");
+  name.textContent=safeText(p.name);
   const info=document.createElement("p");
-  info.textContent="₹"+p.price+" | "+(p.category||"No category")+" | Stock: "+p.stock;
-
+  info.textContent=money(p.price)+" | "+safeText(p.category)+" | Stock: "+safeText(p.stock);
+  div.append(name,info);
+  if(p.image){
+   const img=document.createElement("img");
+   img.className="preview";
+   img.src=p.image;
+   img.alt=p.name||"Product";
+   div.append(img);
+  }
   const edit=document.createElement("button");
   edit.textContent="EDIT";
   edit.onclick=()=>editProduct(id);
-
   const del=document.createElement("button");
   del.textContent="DELETE";
   del.className="danger";
   del.onclick=()=>deleteProduct(id);
-
-  div.append(title,info,edit,del);
-  $("productList").append(div);
+  div.append(edit,del);
+  list.append(div);
  });
+ if(!Object.keys(products).length)list.textContent="No products added yet.";
+}
 
- if(!Object.keys(productData).length)
-  $("productList").textContent="No products added yet.";
+function refreshCategorySelect(){
+ const select=$("pCategory");
+ const current=select.value;
+ select.innerHTML='<option value="">Select Category</option>';
+ Object.values(categories).forEach(c=>{
+  const name=typeof c==="string"?c:c.name;
+  if(!name)return;
+  const op=document.createElement("option");
+  op.value=name;op.textContent=name;
+  select.append(op);
+ });
+ if(current)select.value=current;
 }
 
 $("productForm").onsubmit=async e=>{
  e.preventDefault();
-
- const user=auth.currentUser;
- if(!user||user.uid!==ADMIN_UID)return;
-
+ if(!adminCheck())return;
  const data={
   name:$("pName").value.trim(),
   price:Number($("pPrice").value),
-  category:$("pCategory").value.trim(),
+  category:$("pCategory").value,
   description:$("pDescription").value.trim(),
   stock:Number($("pStock").value),
+  image:$("pImage").value.trim(),
   updatedAt:Date.now()
  };
-
  if(!data.name||!data.category||data.price<=0||data.stock<0){
-  say("pMessage","Please enter valid details.");
+  msg("pMessage","Please enter valid product details.");
   return;
  }
-
  try{
   if(editingProduct){
    await db.ref("products/"+editingProduct).update(data);
-   say("pMessage","Product updated!");
+   msg("pMessage","Product updated successfully.");
   }else{
    data.createdAt=Date.now();
    await db.ref("products").push(data);
-   say("pMessage","Product added!");
+   msg("pMessage","Product added successfully.");
   }
   resetProduct();
- }catch(error){
-  say("pMessage","Save failed: "+error.message);
- }
+ }catch(e){msg("pMessage","Save failed: "+e.message);}
 };
 
 function editProduct(id){
- const p=productData[id];
+ const p=products[id];
  editingProduct=id;
  $("pName").value=p.name||"";
  $("pPrice").value=p.price||"";
  $("pCategory").value=p.category||"";
  $("pDescription").value=p.description||"";
  $("pStock").value=p.stock??0;
+ $("pImage").value=p.image||"";
  $("pSave").textContent="Update Product";
  $("pCancel").hidden=false;
  window.scrollTo({top:0,behavior:"smooth"});
@@ -401,140 +469,387 @@ function resetProduct(){
 
 async function deleteProduct(id){
  if(!confirm("Delete this product?"))return;
- try{
-  await db.ref("products/"+id).remove();
- }catch(error){
-  say("pMessage",error.message);
- }
+ try{await db.ref("products/"+id).remove();}
+ catch(e){msg("pMessage",e.message);}
 }
 
-// Categories
+/* CATEGORIES */
 function loadCategories(){
  db.ref("categories").on("value",snap=>{
-  categoryData=snap.val()||{};
-  $("countCategories").textContent=Object.keys(categoryData).length;
+  categories=snap.val()||{};
+  $("countCategories").textContent=Object.keys(categories).length;
   renderCategories();
- },error=>say("categoryMessage",error.message));
+  refreshCategorySelect();
+ },e=>msg("categoryMessage",e.message));
 }
 
 function renderCategories(){
- $("categoryList").innerHTML="";
- Object.entries(categoryData).forEach(([id,value])=>{
-  const name=typeof value==="string"?value:value.name||"";
+ const list=$("categoryList");
+ list.innerHTML="";
+ Object.entries(categories).forEach(([id,c])=>{
+  const name=typeof c==="string"?c:c.name||"";
   const div=document.createElement("div");
   div.className="item";
-
-  const text=document.createElement("b");
-  text.textContent=name;
-
+  const title=document.createElement("b");
+  title.textContent=name;
   const edit=document.createElement("button");
   edit.textContent="EDIT";
   edit.onclick=async()=>{
-   const newName=prompt("Edit category",name);
-   if(newName&&newName.trim()){
-    try{
-     await db.ref("categories/"+id).set({name:newName.trim()});
-    }catch(e){say("categoryMessage",e.message)}
-   }
+   const n=prompt("New category name",name);
+   if(!n||!n.trim())return;
+   try{await db.ref("categories/"+id).set({name:n.trim()});}
+   catch(e){msg("categoryMessage",e.message);}
   };
-
   const del=document.createElement("button");
   del.textContent="DELETE";
   del.className="danger";
   del.onclick=async()=>{
    if(confirm("Delete category?")){
-    try{await db.ref("categories/"+id).remove()}
-    catch(e){say("categoryMessage",e.message)}
+    try{await db.ref("categories/"+id).remove();}
+    catch(e){msg("categoryMessage",e.message);}
    }
   };
-
-  div.append(text,edit,del);
-  $("categoryList").append(div);
+  div.append(title,edit,del);
+  list.append(div);
  });
 }
 
 $("categoryForm").onsubmit=async e=>{
  e.preventDefault();
+ const name=$("categoryName").value.trim();
+ if(!name)return;
  try{
-  const name=$("categoryName").value.trim();
-  if(!name)return;
-  await db.ref("categories").push({name});
+  await db.ref("categories").push({name,createdAt:Date.now()});
   $("categoryForm").reset();
-  say("categoryMessage","Category added!");
- }catch(error){
-  say("categoryMessage","Save failed: "+error.message);
- }
+  msg("categoryMessage","Category added.");
+ }catch(e){msg("categoryMessage",e.message);}
 };
 
-// Orders
+/* ORDERS */
 function loadOrders(){
  db.ref("orders").on("value",snap=>{
-  const orders=snap.val()||{};
+  orders=snap.val()||{};
   $("countOrders").textContent=Object.keys(orders).length;
-  $("orderList").innerHTML="";
-
-  Object.entries(orders).forEach(([id,o])=>{
-   const div=document.createElement("div");
-   div.className="item";
-
-   const title=document.createElement("b");
-   title.textContent="Order: "+id;
-
-   const info=document.createElement("p");
-   info.textContent="Status: "+(o.status||"Pending")+" | Total: ₹"+(o.total||o.amount||0);
-
-   const select=document.createElement("select");
-   ["Pending","Confirmed","Preparing","Out for Delivery","Delivered","Cancelled"].forEach(s=>{
-    const op=document.createElement("option");
-    op.value=s;op.textContent=s;
-    if(s===(o.status||"Pending"))op.selected=true;
-    select.append(op);
-   });
-
-   const update=document.createElement("button");
-   update.textContent="Update Status";
-   update.onclick=async()=>{
-    try{
-     await db.ref("orders/"+id).update({status:select.value,updatedAt:Date.now()});
-    }catch(e){alert(e.message)}
-   };
-
-   div.append(title,info,select,update);
-   $("orderList").append(div);
-  });
-
-  if(!Object.keys(orders).length)
-   $("orderList").textContent="No orders yet.";
- },error=>$("orderList").textContent=error.message);
+  renderOrders();
+ },e=>$("orderList").textContent=e.message);
 }
 
-// Customers
+function renderOrders(){
+ const list=$("orderList");
+ list.innerHTML="";
+ Object.entries(orders).forEach(([id,o])=>{
+  const div=document.createElement("div");
+  div.className="item";
+  const title=document.createElement("b");
+  title.textContent="Order: "+id;
+  const info=document.createElement("p");
+  info.textContent="Customer: "+(o.name||o.customerName||"Not available")+" | Total: "+money(o.total||o.amount)+" | Status: "+(o.status||"Pending");
+  const phone=document.createElement("p");
+  phone.textContent="Phone: "+(o.phone||o.customerPhone||"Not available");
+  const select=document.createElement("select");
+  ["Pending","Confirmed","Preparing","Out for Delivery","Delivered","Cancelled"].forEach(s=>{
+   const op=document.createElement("option");
+   op.value=s;op.textContent=s;
+   if(s===(o.status||"Pending"))op.selected=true;
+   select.append(op);
+  });
+  const update=document.createElement("button");
+  update.textContent="Update Status";
+  update.onclick=async()=>{
+   try{
+    await db.ref("orders/"+id).update({status:select.value,updatedAt:Date.now()});
+    alert("Order status updated.");
+   }catch(e){alert(e.message);}
+  };
+  div.append(title,info,phone,select,update);
+  list.append(div);
+ });
+ if(!Object.keys(orders).length)list.textContent="No orders yet.";
+}
+
+/* CUSTOMERS */
 function loadCustomers(){
  db.ref("customers").on("value",snap=>{
-  const customers=snap.val()||{};
+  customers=snap.val()||{};
   $("countCustomers").textContent=Object.keys(customers).length;
-  $("customerList").innerHTML="";
-
+  const list=$("customerList");
+  list.innerHTML="";
   Object.entries(customers).forEach(([id,c])=>{
    const div=document.createElement("div");
    div.className="item";
-   div.textContent=(c.name||"Customer")+" | "+(c.email||id);
-   $("customerList").append(div);
+   div.textContent=(c.name||"Customer")+" | "+(c.email||id)+" | "+(c.phone||"No phone");
+   list.append(div);
   });
-
-  if(!Object.keys(customers).length)
-   $("customerList").textContent="No customer profiles found.";
- },error=>$("customerList").textContent=error.message);
+  if(!Object.keys(customers).length)list.textContent="No customer profiles found.";
+ },e=>$("customerList").textContent=e.message);
 }
 
-// Settings
+/* PAYMENTS */
+function loadPayments(){
+ db.ref("settings/paymentMethods").once("value").then(s=>{
+  const p=s.val()||{};
+  $("upiId").value=p.upiId||"";
+  $("upiQr").value=p.qrUrl||"";
+  $("upiEnabled").checked=p.upiEnabled===true;
+  $("codEnabled").checked=p.codEnabled===true;
+  $("razorEnabled").checked=false;
+  previewQR();
+ }).catch(e=>msg("paymentMessage",e.message));
+}
+
+function previewQR(){
+ const url=$("upiQr").value.trim();
+ const img=$("qrPreview");
+ img.hidden=!url;
+ if(url)img.src=url;
+}
+$("upiQr").addEventListener("input",previewQR);
+
+$("paymentForm").onsubmit=async e=>{
+ e.preventDefault();
+ try{
+  await db.ref("settings/paymentMethods").update({
+   upiId:$("upiId").value.trim(),
+   qrUrl:$("upiQr").value.trim(),
+   upiEnabled:$("upiEnabled").checked,
+   codEnabled:$("codEnabled").checked,
+   razorpayEnabled:false
+  });
+  msg("paymentMessage","Payment settings saved. Razorpay remains disabled until backend setup.");
+ }catch(e){msg("paymentMessage",e.message);}
+};
+
+/* DELIVERY */
+function loadDelivery(){
+ db.ref("settings/delivery").once("value").then(s=>{
+  const data=s.val()||{};
+  $("pickupEnabled").checked=data.pickupEnabled===true;
+ }).catch(e=>msg("deliveryMessage",e.message));
+
+ db.ref("deliveryAreas").on("value",snap=>{
+  const data=snap.val()||{};
+  const list=$("deliveryList");
+  list.innerHTML="";
+  Object.entries(data).forEach(([id,d])=>{
+   const div=document.createElement("div");
+   div.className="item";
+   div.textContent=d.area+" | PIN: "+d.pin+" | Charge: "+money(d.charge);
+   const del=document.createElement("button");
+   del.textContent="DELETE";
+   del.className="danger";
+   del.onclick=async()=>{
+    if(confirm("Delete delivery area?")){
+     try{await db.ref("deliveryAreas/"+id).remove();}
+     catch(e){msg("deliveryMessage",e.message);}
+    }
+   };
+   div.append(del);
+   list.append(div);
+  });
+  if(!Object.keys(data).length)list.textContent="No delivery areas added.";
+ },e=>$("deliveryList").textContent=e.message);
+}
+
+$("deliveryForm").onsubmit=async e=>{
+ e.preventDefault();
+ const pin=$("dPin").value.trim();
+ if(!/^\d{6}$/.test(pin)){msg("deliveryMessage","Enter a valid 6-digit PIN code.");return;}
+ try{
+  await db.ref("deliveryAreas").push({
+   area:$("dArea").value.trim(),
+   pin,
+   charge:Number($("dCharge").value),
+   createdAt:Date.now()
+  });
+  $("deliveryForm").reset();
+  msg("deliveryMessage","Delivery area added.");
+ }catch(e){msg("deliveryMessage",e.message);}
+};
+
+async function savePickup(){
+ try{
+  await db.ref("settings/delivery").update({pickupEnabled:$("pickupEnabled").checked});
+  msg("deliveryMessage","Pickup setting saved.");
+ }catch(e){msg("deliveryMessage",e.message);}
+}
+
+/* COUPONS */
+function loadCoupons(){
+ db.ref("coupons").on("value",snap=>{
+  const data=snap.val()||{};
+  const list=$("couponList");
+  list.innerHTML="";
+  Object.entries(data).forEach(([id,c])=>{
+   const div=document.createElement("div");
+   div.className="item";
+   div.textContent=c.code+" | "+c.value+(c.type==="percentage"?"%":"₹")+" | "+(c.active?"Active":"Inactive");
+   const del=document.createElement("button");
+   del.textContent="DELETE";
+   del.className="danger";
+   del.onclick=async()=>{
+    if(confirm("Delete coupon?")){
+     try{await db.ref("coupons/"+id).remove();}
+     catch(e){msg("couponMessage",e.message);}
+    }
+   };
+   div.append(del);
+   list.append(div);
+  });
+  if(!Object.keys(data).length)list.textContent="No coupons created.";
+ },e=>$("couponList").textContent=e.message);
+}
+
+$("couponForm").onsubmit=async e=>{
+ e.preventDefault();
+ const code=$("cCode").value.trim().toUpperCase();
+ const value=Number($("cValue").value);
+ if(!code||value<=0){msg("couponMessage","Enter valid coupon details.");return;}
+ try{
+  await db.ref("coupons").push({
+   code,
+   type:$("cType").value,
+   value,
+   minOrder:Number($("cMin").value)||0,
+   maxDiscount:Number($("cMax").value)||0,
+   usageLimit:Number($("cLimit").value)||100,
+   expiresAt:$("cExpiry").value||"",
+   active:$("cActive").checked,
+   createdAt:Date.now()
+  });
+  $("couponForm").reset();
+  $("cMax").value=200;
+  $("cLimit").value=100;
+  $("cActive").checked=true;
+  msg("couponMessage","Coupon created.");
+ }catch(e){msg("couponMessage",e.message);}
+};
+
+/* REPORTS + EXPENSES */
+function loadReports(){
+ db.ref("settings/expenses").once("value").then(s=>{
+  const expenses=s.val()||{};
+  let expense=0;
+  const list=$("expenseList");
+  list.innerHTML="";
+  Object.entries(expenses).forEach(([id,x])=>{
+   expense+=Number(x.amount||0);
+   const div=document.createElement("div");
+   div.className="item";
+   div.textContent=x.name+" | "+money(x.amount);
+   const del=document.createElement("button");
+   del.textContent="DELETE";
+   del.className="danger";
+   del.onclick=async()=>{
+    if(confirm("Delete expense?")){
+     try{await db.ref("settings/expenses/"+id).remove();loadReports();}
+     catch(e){msg("expenseMessage",e.message);}
+    }
+   };
+   div.append(del);
+   list.append(div);
+  });
+  $("expenseTotal").textContent=money(expense);
+
+  let sales=0;
+  Object.values(orders).forEach(o=>{
+   if(o.status==="Delivered")sales+=Number(o.total||o.amount||0);
+  });
+  $("salesTotal").textContent=money(sales);
+  $("profitTotal").textContent=money(sales-expense);
+ }).catch(e=>msg("expenseMessage",e.message));
+}
+
+$("expenseForm").onsubmit=async e=>{
+ e.preventDefault();
+ try{
+  await db.ref("settings/expenses").push({
+   name:$("expenseName").value.trim(),
+   amount:Number($("expenseAmount").value),
+   createdAt:Date.now()
+  });
+  $("expenseForm").reset();
+  msg("expenseMessage","Expense added.");
+  loadReports();
+ }catch(e){msg("expenseMessage",e.message);}
+};
+
+/* REVIEWS */
+function loadReviews(){
+ db.ref("reviews").on("value",snap=>{
+  const data=snap.val()||{};
+  const list=$("reviewList");
+  list.innerHTML="";
+  Object.entries(data).forEach(([id,r])=>{
+   const div=document.createElement("div");
+   div.className="item";
+   const title=document.createElement("b");
+   title.textContent=(r.name||"Customer")+" | "+(r.rating||"")+" ⭐";
+   const text=document.createElement("p");
+   text.textContent=r.comment||r.review||"No comment";
+   const del=document.createElement("button");
+   del.textContent="DELETE";
+   del.className="danger";
+   del.onclick=async()=>{
+    if(confirm("Delete review?")){
+     try{await db.ref("reviews/"+id).remove();}
+     catch(e){alert(e.message);}
+    }
+   };
+   div.append(title,text,del);
+   list.append(div);
+  });
+  if(!Object.keys(data).length)list.textContent="No reviews found.";
+ },e=>$("reviewList").textContent=e.message);
+}
+
+/* STAFF RECORDS */
+function loadStaff(){
+ db.ref("staff").on("value",snap=>{
+  const data=snap.val()||{};
+  const list=$("staffList");
+  list.innerHTML="";
+  Object.entries(data).forEach(([id,s])=>{
+   const div=document.createElement("div");
+   div.className="item";
+   div.textContent=s.name+" | "+s.role+" | "+(s.phone||"");
+   const del=document.createElement("button");
+   del.textContent="DELETE";
+   del.className="danger";
+   del.onclick=async()=>{
+    if(confirm("Delete staff record?")){
+     try{await db.ref("staff/"+id).remove();}
+     catch(e){msg("staffMessage",e.message);}
+    }
+   };
+   div.append(del);
+   list.append(div);
+  });
+  if(!Object.keys(data).length)list.textContent="No staff records.";
+ },e=>$("staffList").textContent=e.message);
+}
+
+$("staffForm").onsubmit=async e=>{
+ e.preventDefault();
+ try{
+  await db.ref("staff").push({
+   name:$("staffName").value.trim(),
+   phone:$("staffPhone").value.trim(),
+   role:$("staffRole").value.trim(),
+   createdAt:Date.now()
+  });
+  $("staffForm").reset();
+  msg("staffMessage","Staff record added.");
+ }catch(e){msg("staffMessage",e.message);}
+};
+
+/* SETTINGS */
 function loadSettings(){
- db.ref("settings").once("value").then(snap=>{
-  const s=snap.val()||{};
-  if(s.shopName)$("shopName").value=s.shopName;
-  if(s.supportNumber)$("supportNumber").value=s.supportNumber;
-  if(s.tagline)$("tagline").value=s.tagline;
- }).catch(e=>say("settingsMessage",e.message));
+ db.ref("settings").once("value").then(s=>{
+  const data=s.val()||{};
+  $("shopName").value=data.shopName||"TÁŃVIⱤ CAKE SHOP";
+  $("supportNumber").value=data.supportNumber||"+919883184962";
+  $("tagline").value=data.tagline||"Every Cake Tells a Sweet Story.";
+ }).catch(e=>msg("settingsMessage",e.message));
 }
 
 $("settingsForm").onsubmit=async e=>{
@@ -545,12 +860,9 @@ $("settingsForm").onsubmit=async e=>{
    supportNumber:$("supportNumber").value.trim(),
    tagline:$("tagline").value.trim()
   });
-  say("settingsMessage","Settings saved successfully!");
- }catch(error){
-  say("settingsMessage","Save failed: "+error.message);
- }
+  msg("settingsMessage","Settings saved successfully.");
+ }catch(e){msg("settingsMessage","Save failed: "+e.message);}
 };
 </script>
-
 </body>
 </html>
