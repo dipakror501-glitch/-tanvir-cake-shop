@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TÁŃVIⱤ | Coupon Management</title>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f8f3eb;color:#38291f;font-family:Arial,sans-serif}
+header{background:#38291f;color:#f5d99a;padding:18px;display:flex;justify-content:space-between;align-items:center}
+header a{color:#f5d99a;text-decoration:none}
+main{max-width:750px;margin:auto;padding:18px}
+h2{margin-top:25px}
+form,.coupon{background:white;padding:18px;border-radius:14px;margin:15px 0;border:1px solid #eadcc9}
+label{display:block;margin:13px 0 6px;font-size:14px;font-weight:bold}
+input,select{width:100%;padding:12px;border:1px solid #d8c7b2;border-radius:8px;font-size:15px;background:white}
+button{border:0;padding:11px 15px;border-radius:8px;background:#a47738;color:white;font-weight:bold;margin-top:12px;cursor:pointer}
+.delete{background:#a83232;margin-left:6px}
+.edit{background:#514236}
+.status{font-size:13px;margin-top:12px;line-height:1.5}
+.coupon{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.coupon strong{font-size:18px;color:#a47738}
+.badge{font-size:12px;padding:5px 8px;border-radius:20px;background:#e8f5e9;color:#26713a}
+.inactive{background:#fce8e8;color:#a83232}
+small{color:#766656}
+</style>
+</head>
+<body>
+<header>
+<div>♛ TÁŃVIⱤ <small style="color:#f5d99a">COUPON MANAGEMENT</small></div>
+<a href="dashboard.html">← Dashboard</a>
+</header>
+<main>
+<h2>🎟️ Create Coupon</h2>
+<form id="couponForm">
+<label>Coupon Code</label>
+<input id="code" placeholder="Example: WELCOME10" required>
+<label>Discount Type</label>
+<select id="type">
+<option value="percent">Percentage (%)</option>
+<option value="fixed">Fixed Amount (₹)</option>
+</select>
+<label>Discount Value</label>
+<input id="value" type="number" min="1" required>
+<label>Minimum Order Amount (₹)</label>
+<input id="minimum" type="number" min="0" value="0">
+<label>Maximum Discount (₹) — Percentage Coupon Only</label>
+<input id="maximum" type="number" min="0" value="0">
+<label>Usage Limit (0 = Unlimited)</label>
+<input id="limit" type="number" min="0" value="0">
+<label>Expiry Date</label>
+<input id="expiry" type="date">
+<label>Coupon Status</label>
+<select id="active">
+<option value="true">Active</option>
+<option value="false">Inactive</option>
+</select>
+<button type="submit" id="saveButton">SAVE COUPON</button>
+<button type="button" class="edit" id="cancelButton" style="display:none">CANCEL EDIT</button>
+<p class="status" id="message"></p>
+</form>
+<h2>Available Coupons</h2>
+<div id="couponList">Loading coupons...</div>
+</main>
+<script>
+const ADMIN_UID = "vtKNxlGQ9mbqV4i5xrodgAQDKUd2";
+const db = firebase.database();
+const auth = firebase.auth();
+const form = document.getElementById("couponForm");
+const message = document.getElementById("message");
+const list = document.getElementById("couponList");
+let editingId = null;
+let coupons = {};
+auth.onAuthStateChanged(async user => {
+  if (!user) {
+    location.replace("index.html");
+    return;
+  }
+  try {
+    const snap = await db.ref("admins/" + user.uid).once("value");
+    if (user.uid !== ADMIN_UID || snap.val() !== true) {
+      await auth.signOut();
+      location.replace("index.html");
+      return;
+    }
+    loadCoupons();
+  } catch (error) {
+    list.textContent = "Permission error: " + error.message;
+  }
+});
+function loadCoupons() {
+  db.ref("coupons").on("value", snapshot => {
+    coupons = snapshot.val() || {};
+    renderCoupons();
+  }, error => {
+    list.textContent = "Could not load coupons: " + error.message;
+  });
+}
+function renderCoupons() {
+  list.innerHTML = "";
+  if (Object.keys(coupons).length === 0) {
+    list.textContent = "No coupons created yet.";
+    return;
+  }
+  Object.entries(coupons).forEach(([id, c]) => {
+    const card = document.createElement("div");
+    card.className = "coupon";
+    const info = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = c.code || "Unnamed";
+    const details = document.createElement("p");
+    details.textContent =
+      (c.type === "percent" ? c.value + "% OFF" : "₹" + c.value + " OFF") +
+      " | Minimum ₹" + (c.minimum || 0);
+    const badge = document.createElement("span");
+    badge.className = "badge " + (c.active ? "" : "inactive");
+    badge.textContent = c.active ? "ACTIVE" : "INACTIVE";
+    info.append(title, details, badge);
+    const actions = document.createElement("div");
+    const edit = document.createElement("button");
+    edit.className = "edit";
+    edit.textContent = "EDIT";
+    edit.onclick = () => editCoupon(id);
+    const remove = document.createElement("button");
+    remove.className = "delete";
+    remove.textContent = "DELETE";
+    remove.onclick = () => deleteCoupon(id);
+    actions.append(edit, remove);
+    card.append(info, actions);
+    list.append(card);
+  });
+}
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  const code = document.getElementById("code").value.trim().toUpperCase();
+  const type = document.getElementById("type").value;
+  const value = Number(document.getElementById("value").value);
+  const minimum = Number(document.getElementById("minimum").value);
+  const maximum = Number(document.getElementById("maximum").value);
+  const limit = Number(document.getElementById("limit").value);
+  const expiry = document.getElementById("expiry").value;
+  const active = document.getElementById("active").value === "true";
+  if (!/^[A-Z0-9_-]{3,25}$/.test(code)) {
+    message.textContent = "Use 3–25 letters, numbers, _ or - in the coupon code.";
+    return;
+  }
+  if (!Number.isFinite(value) || value <= 0 ||
+      !Number.isFinite(minimum) || minimum < 0 ||
+      !Number.isFinite(maximum) || maximum < 0 ||
+      !Number.isFinite(limit) || limit < 0) {
+    message.textContent = "Please enter valid amounts.";
+    return;
+  }
+  if (type === "percent" && value > 100) {
+    message.textContent = "Percentage discount cannot exceed 100%.";
+    return;
+  }
+  if (type === "fixed" && maximum > 0) {
+    message.textContent = "Maximum discount applies only to percentage coupons.";
+    return;
+  }
+  const duplicate = Object.entries(coupons).some(([id, c]) =>
+    id !== editingId && (c.code || "").toUpperCase() === code
+  );
+  if (duplicate) {
+    message.textContent = "This coupon code already exists.";
+    return;
+  }
+  if (expiry && expiry < new Date().toLocaleDateString("en-CA")) {
+    message.textContent = "Expiry date cannot be in the past.";
+    return;
+  }
+  const data = {
+    code, type, value, minimum, maximum, limit, expiry, active,
+    updatedAt: Date.now()
+  };
+  try {
+    document.getElementById("saveButton").disabled = true;
+    if (editingId) {
+      await db.ref("coupons/" + editingId).update(data);
+      message.textContent = "Coupon updated successfully!";
+    } else {
+      data.usedCount = 0;
+      data.createdAt = Date.now();
+      await db.ref("coupons").push(data);
+      message.textContent = "Coupon created successfully!";
+    }
+    resetForm();
+  } catch (error) {
+    message.textContent = "Save failed: " + error.message;
+  } finally {
+    document.getElementById("saveButton").disabled = false;
+  }
+});
+function editCoupon(id) {
+  const c = coupons[id];
+  if (!c) return;
+  editingId = id;
+  document.getElementById("code").value = c.code || "";
+  document.getElementById("type").value = c.type || "percent";
+  document.getElementById("value").value = c.value || "";
+  document.getElementById("minimum").value = c.minimum || 0;
+  document.getElementById("maximum").value = c.maximum || 0;
+  document.getElementById("limit").value = c.limit || 0;
+  document.getElementById("expiry").value = c.expiry || "";
+  document.getElementById("active").value = String(c.active === true);
+  document.getElementById("saveButton").textContent = "UPDATE COUPON";
+  document.getElementById("cancelButton").style.display = "inline-block";
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+async function deleteCoupon(id) {
+  if (!confirm("Delete this coupon permanently?")) return;
+  try {
+    await db.ref("coupons/" + id).remove();
+    message.textContent = "Coupon deleted.";
+    if (editingId === id) resetForm();
+  } catch (error) {
+    message.textContent = "Delete failed: " + error.message;
+  }
+}
+function resetForm() {
+  editingId = null;
+  form.reset();
+  document.getElementById("minimum").value = 0;
+  document.getElementById("maximum").value = 0;
+  document.getElementById("limit").value = 0;
+  document.getElementById("saveButton").textContent = "SAVE COUPON";
+  document.getElementById("cancelButton").style.display = "none";
+}
+document.getElementById("cancelButton").onclick = resetForm;
+</script>
+</body>
+</html>
