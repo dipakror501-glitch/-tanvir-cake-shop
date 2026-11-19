@@ -2,82 +2,89 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TÁŃVIⱤ | Admin Dashboard</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TÁŃVIⱤ | Admin Control Center</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
 
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#faf6ef;
- color:#3b251d;
+ margin:0;background:#faf6ef;color:#3b251d;
+ font-family:Arial,sans-serif
 }
 header{
- background:#3b251d;
- color:white;
- padding:20px;
- display:flex;
- justify-content:space-between;
- align-items:center;
+ background:#3b251d;color:white;padding:17px;
+ display:flex;justify-content:space-between;align-items:center;
+ position:sticky;top:0;z-index:5
 }
-header h2{margin:0;font-size:19px}
-header span{color:#e2bd83;font-size:12px}
-.container{padding:18px;max-width:1100px;margin:auto}
-.welcome{
- background:#654537;
- color:white;
- padding:22px;
- border-radius:16px;
- margin-bottom:20px;
-}
-.welcome h2{margin:0 0 8px}
-.welcome p{margin:0;color:#eadbca}
-.section-title{margin:25px 0 12px}
-.grid{
- display:grid;
- grid-template-columns:repeat(2,1fr);
- gap:12px;
-}
-.card{
- background:white;
- border:1px solid #e9ded1;
- border-radius:14px;
- padding:17px 12px;
- text-decoration:none;
- color:#3b251d;
- box-shadow:0 3px 12px #3b251d0b;
-}
-.card .icon{font-size:26px}
-.card h3{font-size:15px;margin:10px 0 5px}
-.card p{font-size:12px;color:#89776d;margin:0}
-.card:active{transform:scale(.97)}
-.card.disabled{opacity:.65}
-.badge{
- display:inline-block;
- margin-top:9px;
- font-size:10px;
- color:#8a642f;
- background:#f8eddb;
- padding:5px 8px;
- border-radius:20px;
-}
+header h2{margin:0;font-size:18px}
+header small{color:#e2bd83}
 button{
- border:0;
- background:#b48a51;
- color:white;
- padding:10px 16px;
- border-radius:8px;
- cursor:pointer;
+ border:0;background:#b48a51;color:white;
+ padding:10px 14px;border-radius:8px;cursor:pointer
 }
-footer{
- text-align:center;
- color:#89776d;
- font-size:12px;
- padding:30px 10px;
+.layout{display:flex;min-height:calc(100vh - 60px)}
+aside{
+ width:220px;background:#fffdf9;
+ border-right:1px solid #e9ded1;padding:12px;
+ flex-shrink:0
 }
-@media(min-width:650px){
- .grid{grid-template-columns:repeat(3,1fr)}
+nav button{
+ display:block;width:100%;text-align:left;
+ background:transparent;color:#3b251d;
+ margin:3px 0;padding:13px 10px
+}
+nav button.active,nav button:hover{
+ background:#f1e6d7;color:#805b30
+}
+main{padding:20px;width:100%;max-width:1100px;margin:auto}
+.section{display:none}
+.section.active{display:block}
+h2{margin-top:0}
+.cards{
+ display:grid;grid-template-columns:repeat(2,1fr);
+ gap:12px;margin:18px 0
+}
+.card,.box{
+ background:white;border:1px solid #e9ded1;
+ border-radius:13px;padding:17px;margin-bottom:14px
+}
+.card strong{font-size:23px;display:block;margin-top:10px}
+.card span{font-size:13px;color:#89776d}
+input,select,textarea{
+ width:100%;padding:12px;margin:7px 0 13px;
+ border:1px solid #d8c7b2;border-radius:8px;
+ background:white;font-size:15px
+}
+label{font-size:13px;font-weight:bold}
+.primary{background:#654537}
+.danger{background:#a83232}
+.secondary{background:#75695f}
+.item{
+ background:white;border:1px solid #e9ded1;
+ border-radius:10px;padding:14px;margin:10px 0;
+ overflow-wrap:anywhere
+}
+.item button{margin:5px 5px 0 0}
+.status{font-size:13px;margin:10px 0;overflow-wrap:anywhere}
+.notice{
+ background:#fff4dc;border:1px solid #ead3a7;
+ padding:13px;border-radius:10px;font-size:13px;
+ line-height:1.6;margin:12px 0
+}
+table{width:100%;border-collapse:collapse;background:white}
+td,th{padding:10px;border-bottom:1px solid #eee;text-align:left}
+.table-wrap{overflow-x:auto}
+@media(max-width:650px){
+ .layout{display:block}
+ aside{width:100%;border-right:0;border-bottom:1px solid #e9ded1}
+ nav{display:flex;overflow-x:auto;gap:5px}
+ nav button{white-space:nowrap;width:auto}
+ main{padding:14px}
 }
 </style>
 </head>
@@ -86,175 +93,463 @@ footer{
 
 <header>
  <div>
-  <h2>👑 TÁŃVIⱤ CAKE SHOP</h2>
-  <span>SUPER ADMIN CONTROL CENTER</span>
+  <h2>♛ TÁŃVIⱤ CAKE SHOP</h2>
+  <small>SUPER ADMIN CONTROL CENTER</small>
  </div>
  <button onclick="logout()">Logout</button>
 </header>
 
-<main class="container">
+<div class="layout">
 
- <div class="welcome">
-  <h2>Welcome, Admin 👋</h2>
-  <p>Manage your complete cake shop from one place.</p>
+<aside>
+ <nav id="menu">
+  <button class="active" data-page="home">📊 Dashboard</button>
+  <button data-page="products">🎂 Products</button>
+  <button data-page="categories">📂 Categories</button>
+  <button data-page="orders">🛒 Orders</button>
+  <button data-page="customers">👥 Customers</button>
+  <button data-page="payments">💳 Payments</button>
+  <button data-page="delivery">🚚 Delivery</button>
+  <button data-page="coupons">🎟️ Offers & Coupons</button>
+  <button data-page="reports">📈 Sales Reports</button>
+  <button data-page="reviews">⭐ Reviews</button>
+  <button data-page="staff">👨‍💼 Staff</button>
+  <button data-page="settings">⚙️ Settings</button>
+ </nav>
+</aside>
+
+<main>
+
+<!-- DASHBOARD -->
+<section id="home" class="section active">
+ <h2>Welcome, Admin 👋</h2>
+ <p>Manage your cake shop from one place.</p>
+
+ <div class="cards">
+  <div class="card">🎂 Products<strong id="countProducts">0</strong><span>Total products</span></div>
+  <div class="card">🛒 Orders<strong id="countOrders">0</strong><span>Total orders</span></div>
+  <div class="card">👥 Customers<strong id="countCustomers">0</strong><span>Total customers</span></div>
+  <div class="card">📂 Categories<strong id="countCategories">0</strong><span>Total categories</span></div>
  </div>
 
- <h3 class="section-title">📊 Dashboard</h3>
-
- <div class="grid">
-  <div class="card">
-   <div class="icon">📦</div>
-   <h3>Products</h3>
-   <p>Manage your cake products.</p>
-   <span class="badge">Management</span>
-  </div>
-
-  <div class="card">
-   <div class="icon">🛒</div>
-   <h3>Orders</h3>
-   <p>Manage customer orders.</p>
-   <span class="badge">Management</span>
-  </div>
-
-  <div class="card">
-   <div class="icon">👥</div>
-   <h3>Customers</h3>
-   <p>Customer accounts and details.</p>
-   <span class="badge">Management</span>
-  </div>
+ <div class="notice">
+  Welcome to your TÁŃVIⱤ Cake Shop Admin Panel.
  </div>
+</section>
 
- <h3 class="section-title">🛠️ Store Management</h3>
-
- <div class="grid">
-
-  <a class="card" href="products.html">
-   <div class="icon">🎂</div>
-   <h3>Products</h3>
-   <p>Add, edit, delete and upload photos.</p>
-   <span class="badge">Open Management</span>
-  </a>
-
-  <div class="card">
-   <div class="icon">📂</div>
-   <h3>Categories</h3>
-   <p>Add and edit cake categories.</p>
-   <span class="badge">Coming Next</span>
-  </div>
-
-  <a class="card" href="offers.html">
-   <div class="icon">🎟️</div>
-   <h3>Coupons & Offers</h3>
-   <p>Create and manage discount coupons.</p>
-   <span class="badge">Open Management</span>
-  </a>
-
-  <div class="card">
-   <div class="icon">🛍️</div>
-   <h3>Orders</h3>
-   <p>Confirm, update and cancel orders.</p>
-   <span class="badge">Coming Next</span>
-  </div>
-
-  <div class="card">
-   <div class="icon">👤</div>
-   <h3>Customers</h3>
-   <p>View and manage customers.</p>
-   <span class="badge">Coming Next</span>
-  </div>
-
-  <div class="card">
-   <div class="icon">💳</div>
-   <h3>Payments</h3>
-   <p>UPI, Razorpay and COD.</p>
-   <span class="badge">Coming Next</span>
-  </div>
-
-  <div class="card">
-   <div class="icon">🚚</div>
-   <h3>Delivery</h3>
-   <p>PIN codes, charges and delivery status.</p>
-   <span class="badge">Coming Next</span>
-  </div>
-
-  <div class="card">
-   <div class="icon">⭐</div>
-   <h3>Reviews</h3>
-   <p>Manage customer reviews.</p>
-   <span class="badge">Coming Next</span>
-  </div>
-
-  <div class="card">
-   <div class="icon">📊</div>
-   <h3>Reports & Expenses</h3>
-   <p>Sales, profit and expenses.</p>
-   <span class="badge">Coming Next</span>
-  </div>
-
-  <div class="card">
-   <div class="icon">👨‍💼</div>
-   <h3>Staff Management</h3>
-   <p>Staff accounts and permissions.</p>
-   <span class="badge">Coming Next</span>
-  </div>
-
-  <div class="card">
-   <div class="icon">📱</div>
-   <h3>WhatsApp Settings</h3>
-   <p>Order notifications and support.</p>
-   <span class="badge">Coming Next</span>
-  </div>
-
-  <div class="card">
-   <div class="icon">⚙️</div>
-   <h3>Website Settings</h3>
-   <p>Shop information and configuration.</p>
-   <span class="badge">Coming Next</span>
-  </div>
-
+<!-- PRODUCTS -->
+<section id="products" class="section">
+ <h2>🎂 Products Management</h2>
+ <div class="box">
+  <form id="productForm">
+   <input id="pName" placeholder="Product Name" required>
+   <input id="pPrice" type="number" min="1" placeholder="Price ₹" required>
+   <input id="pCategory" placeholder="Category" required>
+   <textarea id="pDescription" placeholder="Description"></textarea>
+   <input id="pStock" type="number" min="0" value="10" placeholder="Stock">
+   <button class="primary" type="submit" id="pSave">Save Product</button>
+   <button type="button" class="secondary" id="pCancel" onclick="resetProduct()" hidden>Cancel</button>
+   <p id="pMessage" class="status"></p>
+  </form>
  </div>
+ <div id="productList">Loading...</div>
+</section>
+
+<!-- CATEGORIES -->
+<section id="categories" class="section">
+ <h2>📂 Categories Management</h2>
+ <div class="box">
+  <form id="categoryForm">
+   <input id="categoryName" placeholder="Category Name" required>
+   <button class="primary">Add Category</button>
+   <p id="categoryMessage" class="status"></p>
+  </form>
+ </div>
+ <div id="categoryList"></div>
+</section>
+
+<!-- ORDERS -->
+<section id="orders" class="section">
+ <h2>🛒 Orders Management</h2>
+ <div id="orderList">Loading orders...</div>
+</section>
+
+<!-- CUSTOMERS -->
+<section id="customers" class="section">
+ <h2>👥 Customers</h2>
+ <div id="customerList">Loading customers...</div>
+</section>
+
+<!-- PAYMENTS -->
+<section id="payments" class="section">
+ <h2>💳 Payments</h2>
+ <div class="notice">
+  Payment Gateway setup required.<br>
+  UPI QR, Razorpay and COD will be configured after secure backend setup.
+ </div>
+</section>
+
+<!-- DELIVERY -->
+<section id="delivery" class="section">
+ <h2>🚚 Delivery Management</h2>
+ <div class="notice">
+  Delivery zones, PIN codes, delivery charges and tracking require their database configuration.
+ </div>
+</section>
+
+<!-- COUPONS -->
+<section id="coupons" class="section">
+ <h2>🎟️ Offers & Coupons</h2>
+ <div class="box">
+  <p>Open the existing Coupon Management page:</p>
+  <a href="offers.html"><button class="primary">Open Coupon Management</button></a>
+ </div>
+ <div class="notice">
+  Coupon database permissions need to be configured before coupon operations can work.
+ </div>
+</section>
+
+<!-- REPORTS -->
+<section id="reports" class="section">
+ <h2>📈 Sales Reports</h2>
+ <div class="notice">
+  Sales reports will be calculated from verified orders and payment records after payment integration.
+ </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews" class="section">
+ <h2>⭐ Reviews</h2>
+ <div id="reviewList">Review database setup required.</div>
+</section>
+
+<!-- STAFF -->
+<section id="staff" class="section">
+ <h2>👨‍💼 Staff Management</h2>
+ <div class="notice">
+  Staff accounts and role-based permissions require secure backend authorization.
+ </div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="section">
+ <h2>⚙️ Store Settings</h2>
+ <div class="box">
+  <form id="settingsForm">
+   <label>Shop Name</label>
+   <input id="shopName" value="TÁŃVIⱤ CAKE SHOP">
+   <label>Support Number</label>
+   <input id="supportNumber" value="+919883184962">
+   <label>Tagline</label>
+   <input id="tagline" value="Every Cake Tells a Sweet Story.">
+   <button class="primary">Save Settings</button>
+   <p id="settingsMessage" class="status"></p>
+  </form>
+ </div>
+</section>
 
 </main>
-
-<footer>
- TÁŃVIⱤ CAKE SHOP © 2026<br>
- Every Cake Tells a Sweet Story.
-</footer>
-
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-<script src="firebase-config.js"></script>
+</div>
 
 <script>
-const ADMIN_UID = "vtKNxlGQ9mbqV4i5xrodgAQDKUd2";
+const ADMIN_UID="vtKNxlGQ9mbqV4i5xrodgAQDKUd2";
+const auth=firebase.auth();
+const db=firebase.database();
 
-firebase.auth().onAuthStateChanged(async user => {
+let productData={};
+let categoryData={};
+let editingProduct=null;
+
+const $=id=>document.getElementById(id);
+
+function say(id,msg){$(id).textContent=msg}
+
+function logout(){
+ auth.signOut().then(()=>location.replace("index.html"));
+}
+
+// Navigation
+document.querySelectorAll("#menu button").forEach(button=>{
+ button.addEventListener("click",()=>{
+  document.querySelectorAll("#menu button").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  button.classList.add("active");
+  $(button.dataset.page).classList.add("active");
+ });
+});
+
+// Admin verification
+auth.onAuthStateChanged(async user=>{
  if(!user){
   location.replace("index.html");
   return;
  }
 
  try{
-  const snap = await firebase.database()
-   .ref("admins/" + user.uid).once("value");
+  const snap=await db.ref("admins/"+user.uid).once("value");
 
-  if(user.uid !== ADMIN_UID || snap.val() !== true){
-   await firebase.auth().signOut();
+  if(user.uid!==ADMIN_UID || snap.val()!==true){
+   await auth.signOut();
    location.replace("index.html");
+   return;
   }
+
+  loadProducts();
+  loadCategories();
+  loadOrders();
+  loadCustomers();
+  loadSettings();
+
  }catch(error){
-  alert("Admin verification failed: " + error.message);
-  await firebase.auth().signOut();
-  location.replace("index.html");
+  alert("Admin verification failed: "+error.message);
  }
 });
 
-function logout(){
- firebase.auth().signOut().then(()=>{
-  location.replace("index.html");
+// Products
+function loadProducts(){
+ db.ref("products").on("value",snap=>{
+  productData=snap.val()||{};
+  $("countProducts").textContent=Object.keys(productData).length;
+  renderProducts();
+ },error=>say("pMessage",error.message));
+}
+
+function renderProducts(){
+ $("productList").innerHTML="";
+ Object.entries(productData).forEach(([id,p])=>{
+  const div=document.createElement("div");
+  div.className="item";
+
+  const title=document.createElement("b");
+  title.textContent=p.name||"Unnamed";
+
+  const info=document.createElement("p");
+  info.textContent="₹"+p.price+" | "+(p.category||"No category")+" | Stock: "+p.stock;
+
+  const edit=document.createElement("button");
+  edit.textContent="EDIT";
+  edit.onclick=()=>editProduct(id);
+
+  const del=document.createElement("button");
+  del.textContent="DELETE";
+  del.className="danger";
+  del.onclick=()=>deleteProduct(id);
+
+  div.append(title,info,edit,del);
+  $("productList").append(div);
+ });
+
+ if(!Object.keys(productData).length)
+  $("productList").textContent="No products added yet.";
+}
+
+$("productForm").onsubmit=async e=>{
+ e.preventDefault();
+
+ const user=auth.currentUser;
+ if(!user||user.uid!==ADMIN_UID)return;
+
+ const data={
+  name:$("pName").value.trim(),
+  price:Number($("pPrice").value),
+  category:$("pCategory").value.trim(),
+  description:$("pDescription").value.trim(),
+  stock:Number($("pStock").value),
+  updatedAt:Date.now()
+ };
+
+ if(!data.name||!data.category||data.price<=0||data.stock<0){
+  say("pMessage","Please enter valid details.");
+  return;
+ }
+
+ try{
+  if(editingProduct){
+   await db.ref("products/"+editingProduct).update(data);
+   say("pMessage","Product updated!");
+  }else{
+   data.createdAt=Date.now();
+   await db.ref("products").push(data);
+   say("pMessage","Product added!");
+  }
+  resetProduct();
+ }catch(error){
+  say("pMessage","Save failed: "+error.message);
+ }
+};
+
+function editProduct(id){
+ const p=productData[id];
+ editingProduct=id;
+ $("pName").value=p.name||"";
+ $("pPrice").value=p.price||"";
+ $("pCategory").value=p.category||"";
+ $("pDescription").value=p.description||"";
+ $("pStock").value=p.stock??0;
+ $("pSave").textContent="Update Product";
+ $("pCancel").hidden=false;
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function resetProduct(){
+ editingProduct=null;
+ $("productForm").reset();
+ $("pStock").value=10;
+ $("pSave").textContent="Save Product";
+ $("pCancel").hidden=true;
+}
+
+async function deleteProduct(id){
+ if(!confirm("Delete this product?"))return;
+ try{
+  await db.ref("products/"+id).remove();
+ }catch(error){
+  say("pMessage",error.message);
+ }
+}
+
+// Categories
+function loadCategories(){
+ db.ref("categories").on("value",snap=>{
+  categoryData=snap.val()||{};
+  $("countCategories").textContent=Object.keys(categoryData).length;
+  renderCategories();
+ },error=>say("categoryMessage",error.message));
+}
+
+function renderCategories(){
+ $("categoryList").innerHTML="";
+ Object.entries(categoryData).forEach(([id,value])=>{
+  const name=typeof value==="string"?value:value.name||"";
+  const div=document.createElement("div");
+  div.className="item";
+
+  const text=document.createElement("b");
+  text.textContent=name;
+
+  const edit=document.createElement("button");
+  edit.textContent="EDIT";
+  edit.onclick=async()=>{
+   const newName=prompt("Edit category",name);
+   if(newName&&newName.trim()){
+    try{
+     await db.ref("categories/"+id).set({name:newName.trim()});
+    }catch(e){say("categoryMessage",e.message)}
+   }
+  };
+
+  const del=document.createElement("button");
+  del.textContent="DELETE";
+  del.className="danger";
+  del.onclick=async()=>{
+   if(confirm("Delete category?")){
+    try{await db.ref("categories/"+id).remove()}
+    catch(e){say("categoryMessage",e.message)}
+   }
+  };
+
+  div.append(text,edit,del);
+  $("categoryList").append(div);
  });
 }
+
+$("categoryForm").onsubmit=async e=>{
+ e.preventDefault();
+ try{
+  const name=$("categoryName").value.trim();
+  if(!name)return;
+  await db.ref("categories").push({name});
+  $("categoryForm").reset();
+  say("categoryMessage","Category added!");
+ }catch(error){
+  say("categoryMessage","Save failed: "+error.message);
+ }
+};
+
+// Orders
+function loadOrders(){
+ db.ref("orders").on("value",snap=>{
+  const orders=snap.val()||{};
+  $("countOrders").textContent=Object.keys(orders).length;
+  $("orderList").innerHTML="";
+
+  Object.entries(orders).forEach(([id,o])=>{
+   const div=document.createElement("div");
+   div.className="item";
+
+   const title=document.createElement("b");
+   title.textContent="Order: "+id;
+
+   const info=document.createElement("p");
+   info.textContent="Status: "+(o.status||"Pending")+" | Total: ₹"+(o.total||o.amount||0);
+
+   const select=document.createElement("select");
+   ["Pending","Confirmed","Preparing","Out for Delivery","Delivered","Cancelled"].forEach(s=>{
+    const op=document.createElement("option");
+    op.value=s;op.textContent=s;
+    if(s===(o.status||"Pending"))op.selected=true;
+    select.append(op);
+   });
+
+   const update=document.createElement("button");
+   update.textContent="Update Status";
+   update.onclick=async()=>{
+    try{
+     await db.ref("orders/"+id).update({status:select.value,updatedAt:Date.now()});
+    }catch(e){alert(e.message)}
+   };
+
+   div.append(title,info,select,update);
+   $("orderList").append(div);
+  });
+
+  if(!Object.keys(orders).length)
+   $("orderList").textContent="No orders yet.";
+ },error=>$("orderList").textContent=error.message);
+}
+
+// Customers
+function loadCustomers(){
+ db.ref("customers").on("value",snap=>{
+  const customers=snap.val()||{};
+  $("countCustomers").textContent=Object.keys(customers).length;
+  $("customerList").innerHTML="";
+
+  Object.entries(customers).forEach(([id,c])=>{
+   const div=document.createElement("div");
+   div.className="item";
+   div.textContent=(c.name||"Customer")+" | "+(c.email||id);
+   $("customerList").append(div);
+  });
+
+  if(!Object.keys(customers).length)
+   $("customerList").textContent="No customer profiles found.";
+ },error=>$("customerList").textContent=error.message);
+}
+
+// Settings
+function loadSettings(){
+ db.ref("settings").once("value").then(snap=>{
+  const s=snap.val()||{};
+  if(s.shopName)$("shopName").value=s.shopName;
+  if(s.supportNumber)$("supportNumber").value=s.supportNumber;
+  if(s.tagline)$("tagline").value=s.tagline;
+ }).catch(e=>say("settingsMessage",e.message));
+}
+
+$("settingsForm").onsubmit=async e=>{
+ e.preventDefault();
+ try{
+  await db.ref("settings").update({
+   shopName:$("shopName").value.trim(),
+   supportNumber:$("supportNumber").value.trim(),
+   tagline:$("tagline").value.trim()
+  });
+  say("settingsMessage","Settings saved successfully!");
+ }catch(error){
+  say("settingsMessage","Save failed: "+error.message);
+ }
+};
 </script>
 
 </body>
