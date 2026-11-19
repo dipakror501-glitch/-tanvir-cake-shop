@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TÁŃVIⱤ | Products Management</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#f8f3eb;color:#38291f;
+ font-family:Arial,sans-serif
+}
+header{
+ background:#38291f;color:#f5d99a;padding:18px;
+ display:flex;justify-content:space-between;align-items:center
+}
+header a{color:#f5d99a;text-decoration:none}
+main{max-width:850px;margin:auto;padding:18px}
+.box,.product{
+ background:white;padding:18px;border-radius:14px;
+ margin:16px 0;border:1px solid #eadcc9
+}
+h2{margin-top:25px}
+label{display:block;margin:13px 0 6px;font-weight:bold;font-size:14px}
+input,select,textarea{
+ width:100%;padding:12px;border:1px solid #d8c7b2;
+ border-radius:8px;font-size:15px;background:white
+}
+textarea{min-height:85px;resize:vertical}
+button{
+ border:0;padding:11px 15px;border-radius:8px;
+ background:#a47738;color:white;font-weight:bold;
+ margin-top:12px;cursor:pointer
+}
+button:disabled{opacity:.5}
+.delete{background:#a83232;margin-left:6px}
+.edit{background:#514236}
+.status{font-size:13px;margin-top:12px;line-height:1.5}
+.product{
+ display:flex;gap:15px;align-items:center;flex-wrap:wrap
+}
+.product img{
+ width:95px;height:95px;object-fit:cover;border-radius:10px
+}
+.product-info{flex:1;min-width:150px}
+.product-info strong{font-size:17px}
+.product-info p{font-size:13px;color:#887766}
+#productList{margin-top:15px}
+small{color:#887766}
+.back{font-size:13px}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div>♛ TÁŃVIⱤ <small style="color:#f5d99a">PRODUCT MANAGEMENT</small></div>
+ <a href="dashboard.html">← Dashboard</a>
+</header>
+
+<main>
+
+<h2>🎂 Add / Edit Product</h2>
+
+<div class="box">
+<form id="productForm">
+
+<label>Product Name</label>
+<input id="name" placeholder="Chocolate Cake" required>
+
+<label>Product Price (₹)</label>
+<input id="price" type="number" min="1" required>
+
+<label>Category</label>
+<select id="category" required>
+<option value="">Select Category</option>
+<option value="Birthday Cake">Birthday Cake</option>
+<option value="Chocolate Cake">Chocolate Cake</option>
+<option value="Wedding Cake">Wedding Cake</option>
+<option value="Custom Cake">Custom Cake</option>
+<option value="Other">Other</option>
+</select>
+
+<label>Description</label>
+<textarea id="description" placeholder="Product details..."></textarea>
+
+<label>Stock Quantity</label>
+<input id="stock" type="number" min="0" value="10" required>
+
+<label>Product Photo</label>
+<input id="photo" type="file" accept="image/*">
+
+<small>Image size: Maximum 5 MB</small>
+
+<br>
+<button type="submit" id="saveButton">SAVE PRODUCT</button>
+<button type="button" class="edit" id="cancelButton" style="display:none">
+CANCEL EDIT
+</button>
+
+<p class="status" id="message"></p>
+
+</form>
+</div>
+
+<h2>📦 All Products</h2>
+<div id="productList">Loading products...</div>
+
+</main>
+
+<script>
+const ADMIN_UID = "vtKNxlGQ9mbqV4i5xrodgAQDKUd2";
+
+const auth = firebase.auth();
+const db = firebase.database();
+const storage = firebase.storage();
+
+const form = document.getElementById("productForm");
+const message = document.getElementById("message");
+const list = document.getElementById("productList");
+
+let products = {};
+let editingId = null;
+let oldImagePath = "";
+
+function showMessage(text){
+ message.textContent = text;
+}
+
+function resetForm(){
+ editingId = null;
+ oldImagePath = "";
+ form.reset();
+ document.getElementById("stock").value = 10;
+ document.getElementById("saveButton").textContent = "SAVE PRODUCT";
+ document.getElementById("cancelButton").style.display = "none";
+}
+
+auth.onAuthStateChanged(async user => {
+ if(!user){
+  location.replace("index.html");
+  return;
+ }
+
+ try{
+  const snap = await db.ref("admins/"+user.uid).once("value");
+
+  if(user.uid !== ADMIN_UID || snap.val() !== true){
+   await auth.signOut();
+   location.replace("index.html");
+   return;
+  }
+
+  loadProducts();
+
+ }catch(error){
+  showMessage("Permission error: "+error.message);
+ }
+});
+
+function loadProducts(){
+ db.ref("products").on("value",snapshot=>{
+  products = snapshot.val() || {};
+  renderProducts();
+ },error=>{
+  list.textContent = "Loading failed: "+error.message;
+ });
+}
+
+function renderProducts(){
+ list.innerHTML = "";
+
+ if(Object.keys(products).length === 0){
+  list.textContent = "No products added yet.";
+  return;
+ }
+
+ Object.entries(products).forEach(([id,p])=>{
+
+  const card = document.createElement("div");
+  card.className = "product";
+
+  const img = document.createElement("img");
+  img.src = p.image || "";
+  img.alt = p.name || "Product";
+
+  const info = document.createElement("div");
+  info.className = "product-info";
+
+  const title = document.createElement("strong");
+  title.textContent = p.name || "";
+
+  const details = document.createElement("p");
+  details.textContent =
+   "₹"+p.price+" | "+p.category+
+   " | Stock: "+p.stock;
+
+  const edit = document.createElement("button");
+  edit.className = "edit";
+  edit.textContent = "EDIT";
+  edit.onclick = ()=>editProduct(id);
+
+  const remove = document.createElement("button");
+  remove.className = "delete";
+  remove.textContent = "DELETE";
+  remove.onclick = ()=>deleteProduct(id);
+
+  info.append(title,details,edit,remove);
+  card.append(img,info);
+  list.append(card);
+ });
+}
+
+form.addEventListener("submit",async e=>{
+ e.preventDefault();
+
+ const user = auth.currentUser;
+ if(!user || user.uid !== ADMIN_UID){
+  showMessage("Admin permission required.");
+  return;
+ }
+
+ const name = document.getElementById("name").value.trim();
+ const price = Number(document.getElementById("price").value);
+ const category = document.getElementById("category").value;
+ const description = document.getElementById("description").value.trim();
+ const stock = Number(document.getElementById("stock").value);
+ const file = document.getElementById("photo").files[0];
+
+ if(!name || !category || price <= 0 || stock < 0 ||
+    !Number.isFinite(price) || !Number.isFinite(stock)){
+  showMessage("Please enter valid product details.");
+  return;
+ }
+
+ if(file && (!file.type.startsWith("image/") || file.size > 5*1024*1024)){
+  showMessage("Choose an image under 5 MB.");
+  return;
+ }
+
+ const button = document.getElementById("saveButton");
+ button.disabled = true;
+
+ try{
+  let image = products[editingId]?.image || "";
+  let imagePath = oldImagePath;
+
+  if(file){
+   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+   const path = "products/"+Date.now()+"_"+safeName;
+   const ref = storage.ref(path);
+
+   await ref.put(file);
+   image = await ref.getDownloadURL();
+   imagePath = path;
+  }
+
+  const data = {
+   name,
+   price,
+   category,
+   description,
+   stock,
+   image,
+   imagePath,
+   updatedAt: Date.now()
+  };
+
+  if(editingId){
+   await db.ref("products/"+editingId).update(data);
+
+   if(file && oldImagePath){
+    try{await storage.ref(oldImagePath).delete()}catch(e){}
+   }
+
+   showMessage("Product updated successfully!");
+
+  }else{
+   data.createdAt = Date.now();
+   await db.ref("products").push(data);
+   showMessage("Product added successfully!");
+  }
+
+  resetForm();
+
+ }catch(error){
+  showMessage("Save failed: "+error.message);
+ }finally{
+  button.disabled = false;
+ }
+});
+
+function editProduct(id){
+ const p = products[id];
+ if(!p)return;
+
+ editingId = id;
+ oldImagePath = p.imagePath || "";
+
+ document.getElementById("name").value = p.name || "";
+ document.getElementById("price").value = p.price || "";
+ document.getElementById("category").value = p.category || "";
+ document.getElementById("description").value = p.description || "";
+ document.getElementById("stock").value = p.stock ?? 0;
+
+ document.getElementById("saveButton").textContent = "UPDATE PRODUCT";
+ document.getElementById("cancelButton").style.display = "inline-block";
+
+ showMessage("Editing: "+p.name);
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+async function deleteProduct(id){
+ if(!confirm("Delete this product permanently?"))return;
+
+ try{
+  const p = products[id];
+
+  await db.ref("products/"+id).remove();
+
+  if(p.imagePath){
+   try{await storage.ref(p.imagePath).delete()}catch(e){}
+  }
+
+  showMessage("Product deleted successfully!");
+
+ }catch(error){
+  showMessage("Delete failed: "+error.message);
+ }
+}
+
+document.getElementById("cancelButton").onclick = resetForm;
+
+</script>
+</body>
+</html>
