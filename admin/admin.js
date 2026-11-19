@@ -1,45 +1,61 @@
-// TÁŃVIⱤ SUPER ADMIN — Firebase Authentication
-// This signs in an account, but does not itself grant admin permissions.
+// TÁŃVIⱤ SUPER ADMIN — Firebase Authentication + Admin UID Check
 const byId = (id) => document.getElementById(id);
-
 const status = byId("adminNotice") || byId("message");
 const form = byId("adminForm");
-
+const ADMIN_UID = "vtKNxlGQ9mbqV4i5xrodgAQDKUd2";
+function showStatus(message) {
+  if (status) status.textContent = message;
+}
+function hideAdminArea() {
+  if (byId("adminArea")) byId("adminArea").style.display = "none";
+}
 if (byId("togglePassword")) {
   byId("togglePassword").addEventListener("click", () => {
     const input = byId("adminPassword");
     input.type = input.type === "password" ? "text" : "password";
-    byId("togglePassword").textContent = input.type === "password" ? "Show" : "Hide";
+    byId("togglePassword").textContent =
+      input.type === "password" ? "Show" : "Hide";
   });
 }
-
+async function verifyAdmin(user) {
+  const snapshot = await firebase.database()
+    .ref("admins/" + user.uid)
+    .once("value");
+  return user.uid === ADMIN_UID && snapshot.val() === true;
+}
 if (form) {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    hideAdminArea();
     try {
-      if (status) status.textContent = "Signing in…";
+      showStatus("Signing in and verifying admin permission...");
       const email = byId("adminEmail").value.trim();
       const password = byId("adminPassword").value;
-      const credential = await firebase.auth().signInWithEmailAndPassword(email, password);
-
-      if (byId("adminArea")) byId("adminArea").style.display = "block";
-      if (byId("adminWho")) byId("adminWho").textContent = credential.user.email || credential.user.uid;
-      if (status) status.textContent =
-        "Signed in. Admin permissions are NOT verified yet. Do not use this as a live admin dashboard until secure role checks are added.";
+      const credential = await firebase.auth()
+        .signInWithEmailAndPassword(email, password);
+      const allowed = await verifyAdmin(credential.user);
+      if (!allowed) {
+        await firebase.auth().signOut();
+        showStatus("Access denied. This account is not an authorized admin.");
+        return;
+      }
+      if (byId("adminArea")) {
+        byId("adminArea").style.display = "block";
+      }
+      if (byId("adminWho")) {
+        byId("adminWho").textContent = credential.user.email;
+      }
+      showStatus("Admin UID verified. Admin login successful.");
     } catch (error) {
-      if (status) status.textContent = error.message;
+      hideAdminArea();
+      showStatus("Login or permission check failed: " + error.message);
     }
   });
 }
-
 if (byId("adminLogout")) {
   byId("adminLogout").addEventListener("click", async () => {
     await firebase.auth().signOut();
-    if (byId("adminArea")) byId("adminArea").style.display = "none";
-    if (status) status.textContent = "Signed out.";
+    hideAdminArea();
+    showStatus("Signed out.");
   });
 }
-
-firebase.auth().onAuthStateChanged((user) => {
-  if (!user && byId("adminArea")) byId("adminArea").style.display = "none";
-});
