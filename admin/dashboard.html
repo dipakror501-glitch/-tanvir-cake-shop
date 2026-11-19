@@ -1,1 +1,167 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TÁŃVIⱤ | Admin Dashboard</title>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial,sans-serif;
+  background:#f8f3eb;color:#38291f;
+}
+header{
+  background:#38291f;color:#f5d99a;
+  padding:20px;display:flex;
+  justify-content:space-between;align-items:center;
+}
+.logo{font-size:21px;font-weight:bold}
+.logo span{display:block;font-size:10px;letter-spacing:3px}
+button{
+  border:0;padding:11px 15px;border-radius:8px;
+  background:#b58a48;color:white;font-weight:bold;
+}
+.container{padding:20px;max-width:1100px;margin:auto}
+.welcome{margin:20px 0}
+.welcome h1{font-size:25px}
+.welcome p{color:#887766;margin-top:7px}
+.cards{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:13px;margin:22px 0;
+}
+.card{
+  background:white;padding:20px;border-radius:15px;
+  box-shadow:0 3px 15px #0000000c;
+  border:1px solid #eadcc9;
+}
+.card small{color:#8d7967}
+.card h2{margin-top:12px;color:#a47738;font-size:25px}
+.section-title{margin:28px 0 15px}
+.menu{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+.menu a{
+  background:white;text-decoration:none;color:#493528;
+  padding:19px 12px;border-radius:13px;
+  border:1px solid #eadcc9;font-weight:bold;
+}
+.menu a span{display:block;font-size:24px;margin-bottom:9px}
+.notice{
+  background:#fff5df;padding:15px;border-radius:10px;
+  margin-top:20px;font-size:13px;line-height:1.6;
+}
+#loading{padding:60px 20px;text-align:center}
+footer{text-align:center;padding:30px;color:#927f6d;font-size:12px}
+@media(min-width:700px){
+  .cards{grid-template-columns:repeat(4,1fr)}
+  .menu{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+<body>
+<div id="loading">Verifying administrator access...</div>
+<div id="dashboard" style="display:none">
+<header>
+  <div class="logo">♛ TÁŃVIⱤ
+    <span>SUPER ADMIN</span>
+  </div>
+  <button onclick="logout()">LOGOUT</button>
+</header>
+<main class="container">
+<div class="welcome">
+  <h1>Dashboard Overview 👑</h1>
+  <p>Welcome to your Cake Shop Management Center.</p>
+  <p id="adminEmail" style="margin-top:10px"></p>
+</div>
+<h3 class="section-title">Business Overview</h3>
+<div class="cards">
+  <div class="card">
+    <small>Total Products</small>
+    <h2 id="productsCount">—</h2>
+  </div>
+  <div class="card">
+    <small>Total Orders</small>
+    <h2 id="ordersCount">—</h2>
+  </div>
+  <div class="card">
+    <small>Total Customers</small>
+    <h2 id="customersCount">—</h2>
+  </div>
+  <div class="card">
+    <small>Categories</small>
+    <h2 id="categoriesCount">—</h2>
+  </div>
+</div>
+<h3 class="section-title">Management Center</h3>
+<div class="menu">
+  <a href="products.html"><span>🎂</span>Products</a>
+  <a href="categories.html"><span>📂</span>Categories</a>
+  <a href="orders.html"><span>🛒</span>Orders</a>
+  <a href="customers.html"><span>👥</span>Customers</a>
+  <a href="payments.html"><span>💳</span>Payments</a>
+  <a href="delivery.html"><span>🚚</span>Delivery</a>
+  <a href="offers.html"><span>🎟️</span>Offers & Coupons</a>
+  <a href="reports.html"><span>📊</span>Sales Reports</a>
+  <a href="reviews.html"><span>⭐</span>Reviews</a>
+  <a href="staff.html"><span>👨‍💼</span>Staff</a>
+  <a href="settings.html"><span>⚙️</span>Settings</a>
+</div>
+<div class="notice">
+  <b>Security Notice</b><br>
+  Admin access is checked against Firebase Authentication and the
+  Realtime Database admins list. This is an initial dashboard;
+  payment processing, order management and server-side authorization
+  still need implementation.
+</div>
+</main>
+<footer>© 2026 TÁŃVIⱤ CAKE SHOP</footer>
+</div>
+<script>
+const ADMIN_UID = "vtKNxlGQ9mbqV4i5xrodgAQDKUd2";
+firebase.auth().onAuthStateChanged(async user => {
+  if (!user) {
+    location.replace("index.html");
+    return;
+  }
+  try {
+    const snap = await firebase.database()
+      .ref("admins/" + user.uid).once("value");
+    if (user.uid !== ADMIN_UID || snap.val() !== true) {
+      await firebase.auth().signOut();
+      location.replace("index.html");
+      return;
+    }
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("adminEmail").textContent = user.email || "";
+    loadCount("products", "productsCount");
+    loadCount("orders", "ordersCount");
+    loadCount("customers", "customersCount");
+    loadCount("categories", "categoriesCount");
+  } catch (error) {
+    document.getElementById("loading").textContent =
+      "Unable to verify admin access: " + error.message;
+  }
+});
+async function loadCount(path, elementId) {
+  try {
+    const snap = await firebase.database().ref(path).once("value");
+    const data = snap.val();
+    document.getElementById(elementId).textContent =
+      data ? Object.keys(data).length : 0;
+  } catch (error) {
+    document.getElementById(elementId).textContent = "—";
+  }
+}
+async function logout() {
+  await firebase.auth().signOut();
+  location.replace("index.html");
+}
+</script>
+</body>
+</html>
